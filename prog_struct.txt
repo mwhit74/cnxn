@@ -1,0 +1,60 @@
+sbc.py
+    description:
+        - main program control
+    main functions:
+        get_user_input
+        run_analysis
+        run_design
+ui.py
+    description:
+        - user interface
+analysis.py
+    description:
+        - analyzes the bolt connection
+        - manually input/change the connection geometry
+        - analyze existing connections
+    main functions:
+        get_bolt_forces
+        get_bolt_capacity
+        envelope_bolt_forces
+        graph_bolt_layout
+        print_output
+demand.py
+    description:
+        - calculates the demand on each bolt
+        - shear
+        - tension
+            *prying
+        - eccentricity in plane of faying surface
+            *elastic
+            *plastic
+        _ eccentricity normal to place of faying surface
+            *neutral axis not at cg
+            *neutral axis at cg
+            *considering initial tension
+    main functions:
+        shear
+        tension
+        ecc_in_plane_elastic
+        ecc_in_plane_plastic
+        ecc_out_plane_find_na
+        ecc_out_plane_assume_na
+        ecc_out_plane_init_ten
+    helper functions:
+        calc_moments
+        find_instanteous_center
+        find_neutral_axis
+        calc_centroid
+        calc_bolt_coords
+        calc_ixx
+        calc_iyy
+        calc_j
+capacity.py
+    description:
+        - calculates the capacity of the bolt
+        - calculates the capacity of the connection material
+design.py
+    description:
+        - iterates through differnt bolt patterns calling on demand.py to compute
+          the demand
+        - compares the demand with the capacity
