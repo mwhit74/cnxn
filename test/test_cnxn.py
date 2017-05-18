@@ -9,8 +9,8 @@ class TestDemand(unittest.TestCase):
         for x in xrange(0,10):
             for y in xrange(0,10):
                 bolt_num = float(x+y)
-                self.bolts.append({bolt_num:[(float(x),float(y)),d,
-                                    [None, None, None]]})
+                self.bolts.append([bolt_num,(float(x),float(y)),d,
+                                    [None, None, None]])
 
         self.force = ((20.0, 25.0, 5.0),(7.54, 2.34, 4.37),[None, None, None])
 
@@ -19,7 +19,17 @@ class TestDemand(unittest.TestCase):
         del self.bolts
 
     def test_shear(self):
-        pass
+        num_bolts = 100.0
+        crx = 7.54/num_bolts
+        cry = 2.34/num_bolts
+        pdb.set_trace()
+        demand.shear(self.bolts, self.force)
+
+        for bolt in self.bolts:
+            rx = bolt[3][0]
+            ry = bolt[3][1]
+            self.assertEqual(crx, rx)
+            self.assertEqual(cry, ry)
 
     def test_calc_moments(self):
         x = self.force[0][0]

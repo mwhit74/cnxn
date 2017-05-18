@@ -12,10 +12,11 @@ def shear(bolts, force):
                                 attributes
     Returns:
         None
-    """    
+    """
+    calc_moments(force)
     num_bolts = len(bolts)
     for bolt in bolts:
-        bolt_reacs = bolt.value[2]
+        bolt_reacs = bolt[3]
         px = force[1][0]
         py = force[1][1]
         bolt_reacs[0] = px/num_bolts #rx
