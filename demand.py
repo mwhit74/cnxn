@@ -7,6 +7,9 @@ def shear(bolts, force):
     of bolts and the resultant reaction is stored as the x and y reaction for
     each bolt.
 
+    rx = px/num_bolts
+    ry = py/num_bolts
+
     Args:
         bolts (list): List of the bolts in the connetion conforming to the
                         prescribed data structure for a bolt
@@ -19,21 +22,60 @@ def shear(bolts, force):
     for bolt in bolts:
         px = force[1][0]
         py = force[1][1]
-        bolt[4][0] = px/num_bolts #rx
-        bolt[4][1] = py/num_bolts #ry
+
+        rx = px/num_bolts
+        ry = py/num_bolts
+
+        bolt[4][0] = rx
+        bolt[4][1] = ry
 
 def tension(bolts, force):
     pass
 
 def ecc_in_plane_elastic(bolts, force):
-    pass
+    """Calc the bolt reactions in an elastic in plane eccentric shear connection.
+    
+    For each bolt the moment about the z-axis is proportioned based the
+    distance from the centroid of the group to center of the bolt. The resultant
+    reaction is stored in the x and y reaction for each bolt. See Salmon and
+    Johnson 5th Edition pp. 118 for further details. 
+
+    rx = mz*local_yb/j
+    ry = mz*local_xb/j
+
+    Args:
+        bolts (list): List of the bolts in the connetion conforming to the
+                        prescribed data structure for a bolt
+        force (data struct): Data structure using a list to hold the force
+                                attributes
+    Returns:
+        None
+
+    """
+    calc_moments(bolts, force)
+
+    mz = self.force[2][2]
+
+    j = calc_j(bolts)
+
+    for bolt in bolts:
+        local_xb = bolt[3][0]
+        local_yb = bolt[3][1]
+
+        #px = py*local_xf*local_yb/J + px*local_yf*local_yb/J
+        #py = py*local_xf*local_xb/J + px*local_yf*local_xb/J
+        px = mz*local_yb/j
+        py = mz*local_xb/j
+
+        bolt[4][0] = rx
+        bolt[4][1] = ry
 
 def calc_moments(bolts, force):
     """Calculate the x, y, and z moments.
 
-    MX = Pz(y) - Py(z)
-    MY = Px(z) - Pz(x)
-    MZ = Py(x) - Px(y)
+    mx = pz(y) - py(z)
+    my = px(z) - pz(x)
+    mz = py(x) - px(y)
 
     Args:
         force (data struct): Data structure using a list to hold the force
@@ -43,17 +85,21 @@ def calc_moments(bolts, force):
     """
     calc_local_force_coords(bolts, force)
 
-    x = force[0][0]
-    y = force[0][1]
-    z = force[0][2]
+    local_x = force[3][0]
+    local_y = force[3][1]
+    local_z = force[3][2]
 
-    Px = force[1][0]
-    Py = force[1][1]
-    Pz = force[1][2]
+    px = force[1][0]
+    py = force[1][1]
+    pz = force[1][2]
 
-    force[2][0] = Pz*y - Py*z
-    force[2][1] = Px*z - Pz*x
-    force[2][2] = Py*x - Px*y
+    mx = pz*local_y - py*local_z
+    my = px*local_z - pz*local_x
+    mz = py*local_x - px*local_y
+
+    force[2][0] = mx
+    force[2][1] = my
+    force[2][2] = mz
 
 def calc_instanteous_center(bolts):
     pass

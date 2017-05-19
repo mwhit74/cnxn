@@ -24,6 +24,7 @@ class TestDemand(unittest.TestCase):
         num_bolts = 100.0
         crx = 7.54/num_bolts
         cry = 2.34/num_bolts
+
         demand.shear(self.bolts, self.force)
 
         for bolt in self.bolts:
@@ -32,18 +33,68 @@ class TestDemand(unittest.TestCase):
             self.assertEqual(crx, rx)
             self.assertEqual(cry, ry)
 
+    def test_ecc_in_plane_elastic(self):
+        """This test will place a force application point in each quadrant
+        assuming the centroid is the origin. At each force application point a
+        set of forces will be applied in the x and y direction. This set of
+        forces will include all possible combinations of direction in the x and
+        y directions.
+
+        For example in Q1 the set will be (px,py), (-px,py), (px,-py), and
+        (-px,-py).
+
+        This set needs to be applied in each quandrant to vary the signs on the
+        eccentricities associated with the force application point.
+
+        The purpose of this test is to make sure the sign convention is correct
+        and consistent for all possible force application points and directions.
+        """
+    def test_ecc_in_plane_elastic_Q1(self):
+        force_ppx_ppy = [(1.0, 1.5, 5.0),(7.54, 2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_npx_ppy = [(1.0, 1.5, 5.0),(-7.54, 2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_ppx_npy = [(1.0, 1.5, 5.0),(7.54, -2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_npx_npy = [(1.0, 1.5, 5.0),(-7.54, -2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+
+    def test_ecc_in_plane_elastic_Q2(self):
+        force_ppx_ppy = [(-1.0, 1.5, 5.0),(7.54, 2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_npx_ppy = [(-1.0, 1.5, 5.0),(-7.54, 2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_ppx_npy = [(-1.0, 1.5, 5.0),(7.54, -2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_npx_npy = [(-1.0, 1.5, 5.0),(-7.54, -2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+
+    def test_ecc_in_plane_elastic_Q3(self):
+        force_ppx_ppy = [(-1.0, -1.5, 5.0),(7.54, 2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_npx_ppy = [(-1.0, -1.5, 5.0),(-7.54, 2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_ppx_npy = [(-1.0, -1.5, 5.0),(7.54, -2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_npx_npy = [(-1.0, -1.5, 5.0),(-7.54, -2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+
+    def test_ecc_in_plane_elastic_Q4(self):
+        force_ppx_ppy = [(1.0, -1.5, 5.0),(7.54, 2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_npx_ppy = [(1.0, -1.5, 5.0),(-7.54, 2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_ppx_npy = [(1.0, -1.5, 5.0),(7.54, -2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        force_npx_npy = [(1.0, -1.5, 5.0),(-7.54, -2.34, 4.37),[None, None, None],
+                            [None, None, None]]
+        
+
+
     def test_calc_moments(self):
-        x = self.force[0][0]
-        y = self.force[0][1]
-        z = self.force[0][2]
-
-        Px = self.force[1][0]
-        Py = self.force[1][1]
-        Pz = self.force[1][2]
-
-        cMx = Pz*y - Py*z
-        cMy = Px*z - Pz*x
-        cMz = Py*x - Px*y
+        cMx = 97.55
+        cMy = -49.7
+        cMz = -141.7
 
         demand.calc_moments(self.bolts, self.force)
 
