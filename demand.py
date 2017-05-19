@@ -15,14 +15,12 @@ def shear(bolts, force):
     Returns:
         None
     """
-    calc_moments(force)
     num_bolts = len(bolts)
     for bolt in bolts:
-        bolt_reacs = bolt[3]
         px = force[1][0]
         py = force[1][1]
-        bolt_reacs[0] = px/num_bolts #rx
-        bolt_reacs[1] = py/num_bolts #ry
+        bolt[4][0] = px/num_bolts #rx
+        bolt[4][1] = py/num_bolts #ry
 
 def tension(bolts, force):
     pass
@@ -30,7 +28,7 @@ def tension(bolts, force):
 def ecc_in_plane_elastic(bolts, force):
     pass
 
-def calc_moments(force):
+def calc_moments(bolts, force):
     """Calculate the x, y, and z moments.
 
     MX = Pz(y) - Py(z)
@@ -43,7 +41,8 @@ def calc_moments(force):
     Returns:
         None
     """
-    force = calc_local_force_coords(force)
+    calc_local_force_coords(bolts, force)
+
     x = force[0][0]
     y = force[0][1]
     z = force[0][2]
@@ -57,8 +56,10 @@ def calc_moments(force):
     force[2][2] = Py*x - Px*y
 
 def calc_instanteous_center(bolts):
+    pass
 
 def calc_neutral_axis(bolts):
+    pass
 
 def calc_centroid(bolts):
     """Calculate the centroid of the bolt group."""
@@ -82,8 +83,8 @@ def calc_local_bolt_coords(bolts):
         user_y = bolt[1][1]
         local_x = user_x - x_cent
         local_y = user_y - y_cent
-        bolt[1][0] = local_x
-        bolt[1][1] = local_y
+        bolt[3][0] = local_x
+        bolt[3][1] = local_y
 
 def calc_local_force_coords(bolts, force):
     """Calculate force coords with the centroid of the bolt group as origin."""
@@ -97,25 +98,25 @@ def calc_local_force_coords(bolts, force):
     local_y = user_y - y_cent
     local_z = user_z
 
-    force[0][0] = local_x
-    force[0][1] = local_y
-    force[0][2] = local_z
+    force[3][0] = local_x
+    force[3][1] = local_y
+    force[3][2] = local_z
 
 def calc_ixx(bolts):
     """Calculate the 2nd moment of area of the bolt pattern about the x-axis."""
-    bolts = calc_local_bolts_coords(bolts)
+    calc_local_bolt_coords(bolts)
     sum_ixx = 0.0
     for bolt in bolts:
-        y = bolt[1][1]
+        y = bolt[3][1]
         sum_ixx = sum_ixx + math.pow(y,2)
     return sum_ixx
 
 def calc_iyy(bolts):
     """Calculate the 2nd moment of area of the bolt pattern about the y-axis."""
-    bolts = calc_local_bolts_coords(bolts)
+    calc_local_bolt_coords(bolts)
     sum_iyy = 0.0
     for bolt in bolts:
-        x = bolt[1][0]
+        x = bolt[3][0]
         sum_iyy = sum_iyy + math.pow(x,2)
     return sum_iyy
 
@@ -123,4 +124,4 @@ def calc_j(bolts):
     """Calculate the polar moment of area of bolt pattern about the z-axis."""
     ixx = calc_ixx(bolts)
     iyy = calc_iyy(bolts)
-    return math.pow(ixx,2) + math.pow(iyy,2)
+    return ixx + iyy
