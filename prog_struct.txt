@@ -58,3 +58,15 @@ design.py
         - iterates through differnt bolt patterns calling on demand.py to compute
           the demand
         - compares the demand with the capacity
+
+data structures
+bolt = [bolt_num,
+        (user_x, user_y),
+        diameter,
+        [local_x, local_y],
+        [Rx, Ry, Rz]]
+
+force = [(user_x, user_y, user_z),
+         (Px, Py, Pz),
+         [Mx, My, Mz],
+         [local_x, local_y, local_y]]
