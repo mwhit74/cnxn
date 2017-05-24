@@ -4,7 +4,7 @@ def shear(bolts, force):
     """Calculate the direct shear force in each direction on each bolt.
 
     For each bolt the force in the x and y directions is divided by total number
-    of bolts and the resultant reaction is stored as the x and y reaction for
+    of bolts and the resultant force is stored as the x and y reaction for
     each bolt.
 
     rx = px/num_bolts
@@ -37,11 +37,13 @@ def ecc_in_plane_elastic(bolts, force):
     
     For each bolt the moment about the z-axis is proportioned based the
     distance from the centroid of the group to center of the bolt. The resultant
-    reaction is stored in the x and y reaction for each bolt. See Salmon and
+    force is stored in the x and y force for each bolt. See Salmon and
     Johnson 5th Edition pp. 118 for further details. 
 
-    rx = mz*local_yb/j
+    rx = -1*mz*local_yb/j
     ry = mz*local_xb/j
+
+    The rx is multiplied by -1 due to the coordinate system used for this program. 
 
     Args:
         bolts (list): List of the bolts in the connetion conforming to the
@@ -53,8 +55,9 @@ def ecc_in_plane_elastic(bolts, force):
 
     """
     calc_moments(bolts, force)
+    calc_local_bolt_coords(bolts)
 
-    mz = self.force[2][2]
+    mz = force[2][2]
 
     j = calc_j(bolts)
 
@@ -62,10 +65,10 @@ def ecc_in_plane_elastic(bolts, force):
         local_xb = bolt[3][0]
         local_yb = bolt[3][1]
 
-        #px = py*local_xf*local_yb/J + px*local_yf*local_yb/J
-        #py = py*local_xf*local_xb/J + px*local_yf*local_xb/J
-        px = mz*local_yb/j
-        py = mz*local_xb/j
+        #px = py*local_xf*local_yb/j - px*local_yf*local_yb/j
+        #py = py*local_xf*local_xb/j - px*local_yf*local_xb/j
+        rx = -1*mz*local_yb/j
+        ry = mz*local_xb/j
 
         bolt[4][0] = rx
         bolt[4][1] = ry
