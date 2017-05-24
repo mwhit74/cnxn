@@ -579,8 +579,6 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
         
-
-
     def test_calc_moments(self):
         cmx = 77.885
         cmy = -30.0349

@@ -73,6 +73,9 @@ def ecc_in_plane_elastic(bolts, force):
         bolt[4][0] = rx
         bolt[4][1] = ry
 
+def ecc_in_plane_plastic(bolts, force):
+    pass
+
 def calc_moments(bolts, force):
     """Calculate the x, y, and z moments.
 
