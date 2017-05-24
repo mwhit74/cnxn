@@ -50,3 +50,7 @@ bolt
 parallel to the z-axis
 6. the faying surface is the origin of the z-axis
 7. only one faying surface is allowed
+8. The force given to the program should have the magnitude and direction
+   associated with the program positive coordinate system.
+9. The reactions on the bolts are the forces required at the bolt locations to
+   resist the applied force. 

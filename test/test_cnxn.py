@@ -22,8 +22,8 @@ class TestDemand(unittest.TestCase):
 
     def test_shear(self):
         num_bolts = 100.0
-        crx = 7.54/num_bolts
-        cry = 2.34/num_bolts
+        crx = -7.54/num_bolts
+        cry = -2.34/num_bolts
 
         demand.shear(self.bolts, self.force)
 
@@ -64,14 +64,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = 0.03198
-        cbolt_q1_ry = -0.03198
-        cbolt_q2_rx = 0.03198
-        cbolt_q2_ry = 0.03198
-        cbolt_q3_rx = -0.03198
-        cbolt_q3_ry = 0.03198
-        cbolt_q4_rx = -0.03198
-        cbolt_q4_ry = -0.03198
+        cbolt_q1_rx = -0.03198
+        cbolt_q1_ry = 0.03198
+        cbolt_q2_rx = -0.03198
+        cbolt_q2_ry = -0.03198
+        cbolt_q3_rx = 0.03198
+        cbolt_q3_ry = -0.03198
+        cbolt_q4_rx = 0.03198
+        cbolt_q4_ry = 0.03198
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -98,14 +98,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = -0.03198
-        cbolt_q1_ry = 0.03198
-        cbolt_q2_rx = -0.03198
-        cbolt_q2_ry = -0.03198
-        cbolt_q3_rx = 0.03198
-        cbolt_q3_ry = -0.03198
-        cbolt_q4_rx = 0.03198
-        cbolt_q4_ry = 0.03198
+        cbolt_q1_rx = 0.03198
+        cbolt_q1_ry = -0.03198
+        cbolt_q2_rx = 0.03198
+        cbolt_q2_ry = 0.03198
+        cbolt_q3_rx = -0.03198
+        cbolt_q3_ry = 0.03198
+        cbolt_q4_rx = -0.03198
+        cbolt_q4_ry = -0.03198
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -132,14 +132,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = -0.012409 
-        cbolt_q1_ry = 0.012409
-        cbolt_q2_rx = -0.012409
-        cbolt_q2_ry = -0.012409
-        cbolt_q3_rx = 0.012409
-        cbolt_q3_ry = -0.012409
-        cbolt_q4_rx = 0.012409
-        cbolt_q4_ry = 0.012409
+        cbolt_q1_rx = 0.012409 
+        cbolt_q1_ry = -0.012409
+        cbolt_q2_rx = 0.012409
+        cbolt_q2_ry = 0.012409
+        cbolt_q3_rx = -0.012409
+        cbolt_q3_ry = 0.012409
+        cbolt_q4_rx = -0.012409
+        cbolt_q4_ry = -0.012409
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -166,14 +166,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = 0.012409
-        cbolt_q1_ry = -0.012409
-        cbolt_q2_rx = 0.012409
-        cbolt_q2_ry = 0.012409
-        cbolt_q3_rx = -0.012409
-        cbolt_q3_ry = 0.012409
-        cbolt_q4_rx = -0.012409
-        cbolt_q4_ry = -0.012409
+        cbolt_q1_rx = -0.012409
+        cbolt_q1_ry = 0.012409
+        cbolt_q2_rx = -0.012409
+        cbolt_q2_ry = -0.012409
+        cbolt_q3_rx = 0.012409
+        cbolt_q3_ry = -0.012409
+        cbolt_q4_rx = 0.012409
+        cbolt_q4_ry = 0.012409
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -200,14 +200,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = 0.031988
-        cbolt_q1_ry = -0.031988
-        cbolt_q2_rx = 0.031988
-        cbolt_q2_ry = 0.031988
-        cbolt_q3_rx = -0.031988
-        cbolt_q3_ry = 0.031988
-        cbolt_q4_rx = -0.031988
-        cbolt_q4_ry = -0.031988
+        cbolt_q1_rx = -0.031988
+        cbolt_q1_ry = 0.031988
+        cbolt_q2_rx = -0.031988
+        cbolt_q2_ry = -0.031988
+        cbolt_q3_rx = 0.031988
+        cbolt_q3_ry = -0.031988
+        cbolt_q4_rx = 0.031988
+        cbolt_q4_ry = 0.031988
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -233,14 +233,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = -0.031988
-        cbolt_q1_ry = 0.031988
-        cbolt_q2_rx = -0.031988
-        cbolt_q2_ry = -0.031988
-        cbolt_q3_rx = 0.031988
-        cbolt_q3_ry = -0.031988
-        cbolt_q4_rx = 0.031988
-        cbolt_q4_ry = 0.031988
+        cbolt_q1_rx = 0.031988
+        cbolt_q1_ry = -0.031988
+        cbolt_q2_rx = 0.031988
+        cbolt_q2_ry = 0.031988
+        cbolt_q3_rx = -0.031988
+        cbolt_q3_ry = 0.031988
+        cbolt_q4_rx = -0.031988
+        cbolt_q4_ry = -0.031988
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -265,14 +265,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = 0.012409
-        cbolt_q1_ry = -0.012409
-        cbolt_q2_rx = 0.012409
-        cbolt_q2_ry = 0.012409
-        cbolt_q3_rx = -0.012409
-        cbolt_q3_ry = 0.012409
-        cbolt_q4_rx = -0.012409
-        cbolt_q4_ry = -0.012409
+        cbolt_q1_rx = -0.012409
+        cbolt_q1_ry = 0.012409
+        cbolt_q2_rx = -0.012409
+        cbolt_q2_ry = -0.012409
+        cbolt_q3_rx = 0.012409
+        cbolt_q3_ry = -0.012409
+        cbolt_q4_rx = 0.012409
+        cbolt_q4_ry = 0.012409
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -297,14 +297,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = -0.012409
-        cbolt_q1_ry = 0.012409
-        cbolt_q2_rx = -0.012409
-        cbolt_q2_ry = -0.012409
-        cbolt_q3_rx = 0.012409
-        cbolt_q3_ry = -0.012409
-        cbolt_q4_rx = 0.012409
-        cbolt_q4_ry = 0.012409
+        cbolt_q1_rx = 0.012409
+        cbolt_q1_ry = -0.012409
+        cbolt_q2_rx = 0.012409
+        cbolt_q2_ry = 0.012409
+        cbolt_q3_rx = -0.012409
+        cbolt_q3_ry = 0.012409
+        cbolt_q4_rx = -0.012409
+        cbolt_q4_ry = -0.012409
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -330,14 +330,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = -0.031988
-        cbolt_q1_ry = 0.031988
-        cbolt_q2_rx = -0.031988
-        cbolt_q2_ry = -0.031988
-        cbolt_q3_rx = 0.031988
-        cbolt_q3_ry = -0.031988
-        cbolt_q4_rx = 0.031988
-        cbolt_q4_ry = 0.031988
+        cbolt_q1_rx = 0.031988
+        cbolt_q1_ry = -0.031988
+        cbolt_q2_rx = 0.031988
+        cbolt_q2_ry = 0.031988
+        cbolt_q3_rx = -0.031988
+        cbolt_q3_ry = 0.031988
+        cbolt_q4_rx = -0.031988
+        cbolt_q4_ry = -0.031988
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -363,14 +363,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = 0.031988
-        cbolt_q1_ry = -0.031988
-        cbolt_q2_rx = 0.031988
-        cbolt_q2_ry = 0.031988
-        cbolt_q3_rx = -0.031988
-        cbolt_q3_ry = 0.031988
-        cbolt_q4_rx = -0.031988
-        cbolt_q4_ry = -0.031988
+        cbolt_q1_rx = -0.031988
+        cbolt_q1_ry = 0.031988
+        cbolt_q2_rx = -0.031988
+        cbolt_q2_ry = -0.031988
+        cbolt_q3_rx = 0.031988
+        cbolt_q3_ry = -0.031988
+        cbolt_q4_rx = 0.031988
+        cbolt_q4_ry = 0.031988
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -386,39 +386,6 @@ class TestDemand(unittest.TestCase):
                             [None, None, None]]
 
         demand.ecc_in_plane_elastic(self.bolts, force_py)
-    
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
-
-        cbolt_q1_rx = 0.012409
-        cbolt_q1_ry = -0.012409
-        cbolt_q2_rx = 0.012409
-        cbolt_q2_ry = 0.012409
-        cbolt_q3_rx = -0.012409
-        cbolt_q3_ry = 0.012409
-        cbolt_q4_rx = -0.012409
-        cbolt_q4_ry = -0.012409
-
-        self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
-        self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
-        self.assertAlmostEqual(bolt_q2_rx, cbolt_q2_rx, places=3)
-        self.assertAlmostEqual(bolt_q2_ry, cbolt_q2_ry, places=3)
-        self.assertAlmostEqual(bolt_q3_rx, cbolt_q3_rx, places=3)
-        self.assertAlmostEqual(bolt_q3_ry, cbolt_q3_ry, places=3)
-        self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
-        self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
-
-    def test_ecc_in_plane_elastic_q3_fny(self):
-        force_ny = [(2.0, 2.5, 5.0),(0.0, -2.34, 0.0),[None, None, None],
-                            [None, None, None]]
-
-        demand.ecc_in_plane_elastic(self.bolts, force_ny)
     
         bolt_q1_rx = self.bolts[88][4][0]
         bolt_q1_ry = self.bolts[88][4][1]
@@ -446,12 +413,78 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q3_ry, cbolt_q3_ry, places=3)
         self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
+
+    def test_ecc_in_plane_elastic_q3_fny(self):
+        force_ny = [(2.0, 2.5, 5.0),(0.0, -2.34, 0.0),[None, None, None],
+                            [None, None, None]]
+
+        demand.ecc_in_plane_elastic(self.bolts, force_ny)
+    
+        bolt_q1_rx = self.bolts[88][4][0]
+        bolt_q1_ry = self.bolts[88][4][1]
+        bolt_q2_rx = self.bolts[18][4][0]
+        bolt_q2_ry = self.bolts[18][4][1]
+        bolt_q3_rx = self.bolts[11][4][0]
+        bolt_q3_ry = self.bolts[11][4][1]
+        bolt_q4_rx = self.bolts[81][4][0]
+        bolt_q4_ry = self.bolts[81][4][1]
+
+        cbolt_q1_rx = 0.012409
+        cbolt_q1_ry = -0.012409
+        cbolt_q2_rx = 0.012409
+        cbolt_q2_ry = 0.012409
+        cbolt_q3_rx = -0.012409
+        cbolt_q3_ry = 0.012409
+        cbolt_q4_rx = -0.012409
+        cbolt_q4_ry = -0.012409
+
+        self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
+        self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
+        self.assertAlmostEqual(bolt_q2_rx, cbolt_q2_rx, places=3)
+        self.assertAlmostEqual(bolt_q2_ry, cbolt_q2_ry, places=3)
+        self.assertAlmostEqual(bolt_q3_rx, cbolt_q3_rx, places=3)
+        self.assertAlmostEqual(bolt_q3_ry, cbolt_q3_ry, places=3)
+        self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
+        self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 #QUADRANT 4
     def test_ecc_in_plane_elastic_q4_fpx(self):
         force_px = [(7.0, 2.5, 5.0),(7.54, 0.0, 0.0),[None, None, None],
                             [None, None, None]]
 
         demand.ecc_in_plane_elastic(self.bolts, force_px)
+    
+        bolt_q1_rx = self.bolts[88][4][0]
+        bolt_q1_ry = self.bolts[88][4][1]
+        bolt_q2_rx = self.bolts[18][4][0]
+        bolt_q2_ry = self.bolts[18][4][1]
+        bolt_q3_rx = self.bolts[11][4][0]
+        bolt_q3_ry = self.bolts[11][4][1]
+        bolt_q4_rx = self.bolts[81][4][0]
+        bolt_q4_ry = self.bolts[81][4][1]
+
+        cbolt_q1_rx = 0.031988
+        cbolt_q1_ry = -0.031988
+        cbolt_q2_rx = 0.031988
+        cbolt_q2_ry = 0.031988
+        cbolt_q3_rx = -0.031988
+        cbolt_q3_ry = 0.031988
+        cbolt_q4_rx = -0.031988
+        cbolt_q4_ry = -0.031988
+
+        self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
+        self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
+        self.assertAlmostEqual(bolt_q2_rx, cbolt_q2_rx, places=3)
+        self.assertAlmostEqual(bolt_q2_ry, cbolt_q2_ry, places=3)
+        self.assertAlmostEqual(bolt_q3_rx, cbolt_q3_rx, places=3)
+        self.assertAlmostEqual(bolt_q3_ry, cbolt_q3_ry, places=3)
+        self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
+        self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
+
+    def test_ecc_in_plane_elastic_q4_fnx(self):
+        force_nx = [(7.0, 2.5, 5.0),(-7.54, 0.0, 0.0),[None, None, None],
+                            [None, None, None]]
+
+        demand.ecc_in_plane_elastic(self.bolts, force_nx)
     
         bolt_q1_rx = self.bolts[88][4][0]
         bolt_q1_ry = self.bolts[88][4][1]
@@ -480,39 +513,6 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
-    def test_ecc_in_plane_elastic_q4_fnx(self):
-        force_nx = [(7.0, 2.5, 5.0),(-7.54, 0.0, 0.0),[None, None, None],
-                            [None, None, None]]
-
-        demand.ecc_in_plane_elastic(self.bolts, force_nx)
-    
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
-
-        cbolt_q1_rx = 0.031988
-        cbolt_q1_ry = -0.031988
-        cbolt_q2_rx = 0.031988
-        cbolt_q2_ry = 0.031988
-        cbolt_q3_rx = -0.031988
-        cbolt_q3_ry = 0.031988
-        cbolt_q4_rx = -0.031988
-        cbolt_q4_ry = -0.031988
-
-        self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
-        self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
-        self.assertAlmostEqual(bolt_q2_rx, cbolt_q2_rx, places=3)
-        self.assertAlmostEqual(bolt_q2_ry, cbolt_q2_ry, places=3)
-        self.assertAlmostEqual(bolt_q3_rx, cbolt_q3_rx, places=3)
-        self.assertAlmostEqual(bolt_q3_ry, cbolt_q3_ry, places=3)
-        self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
-        self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
-
     def test_ecc_in_plane_elastic_q4_fpy(self):
         force_py = [(7.0, 2.5, 5.0),(0.0, 2.34, 0.0),[None, None, None],
                             [None, None, None]]
@@ -528,14 +528,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = -0.012409
-        cbolt_q1_ry = 0.012409
-        cbolt_q2_rx = -0.012409
-        cbolt_q2_ry = -0.012409
-        cbolt_q3_rx = 0.012409
-        cbolt_q3_ry = -0.012409
-        cbolt_q4_rx = 0.012409
-        cbolt_q4_ry = 0.012409
+        cbolt_q1_rx = 0.012409
+        cbolt_q1_ry = -0.012409
+        cbolt_q2_rx = 0.012409
+        cbolt_q2_ry = 0.012409
+        cbolt_q3_rx = -0.012409
+        cbolt_q3_ry = 0.012409
+        cbolt_q4_rx = -0.012409
+        cbolt_q4_ry = -0.012409
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)
@@ -561,14 +561,14 @@ class TestDemand(unittest.TestCase):
         bolt_q4_rx = self.bolts[81][4][0]
         bolt_q4_ry = self.bolts[81][4][1]
 
-        cbolt_q1_rx = 0.012409
-        cbolt_q1_ry = -0.012409
-        cbolt_q2_rx = 0.012409
-        cbolt_q2_ry = 0.012409
-        cbolt_q3_rx = -0.012409
-        cbolt_q3_ry = 0.012409
-        cbolt_q4_rx = -0.012409
-        cbolt_q4_ry = -0.012409
+        cbolt_q1_rx = -0.012409
+        cbolt_q1_ry = 0.012409
+        cbolt_q2_rx = -0.012409
+        cbolt_q2_ry = -0.012409
+        cbolt_q3_rx = 0.012409
+        cbolt_q3_ry = -0.012409
+        cbolt_q4_rx = 0.012409
+        cbolt_q4_ry = 0.012409
 
         self.assertAlmostEqual(bolt_q1_rx, cbolt_q1_rx, places=3)
         self.assertAlmostEqual(bolt_q1_ry, cbolt_q1_ry, places=3)

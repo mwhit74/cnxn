@@ -4,7 +4,7 @@ def shear(bolts, force):
     """Calculate the direct shear force in each direction on each bolt.
 
     For each bolt the force in the x and y directions is divided by total number
-    of bolts and the resultant force is stored as the x and y reaction for
+    of bolts and the resultant reaction is stored as the x and y reaction for
     each bolt.
 
     rx = px/num_bolts
@@ -23,8 +23,8 @@ def shear(bolts, force):
         px = force[1][0]
         py = force[1][1]
 
-        rx = px/num_bolts
-        ry = py/num_bolts
+        rx = -px/num_bolts
+        ry = -py/num_bolts
 
         bolt[4][0] = rx
         bolt[4][1] = ry
@@ -37,7 +37,7 @@ def ecc_in_plane_elastic(bolts, force):
     
     For each bolt the moment about the z-axis is proportioned based the
     distance from the centroid of the group to center of the bolt. The resultant
-    force is stored in the x and y force for each bolt. See Salmon and
+    reaction is stored in the x and y force for each bolt. See Salmon and
     Johnson 5th Edition pp. 118 for further details. 
 
     rx = -1*mz*local_yb/j
@@ -67,8 +67,8 @@ def ecc_in_plane_elastic(bolts, force):
 
         #px = py*local_xf*local_yb/j - px*local_yf*local_yb/j
         #py = py*local_xf*local_xb/j - px*local_yf*local_xb/j
-        rx = -1*mz*local_yb/j
-        ry = mz*local_xb/j
+        rx = mz*local_yb/j
+        ry = -1*mz*local_xb/j
 
         bolt[4][0] = rx
         bolt[4][1] = ry
