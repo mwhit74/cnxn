@@ -49,6 +49,8 @@ class TestDemand(unittest.TestCase):
 
 #QUADRANT 1 
     def test_ecc_in_plane_elastic_q1_fpx(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
 
         force_px = [(7.0, 6.5, 5.0),(7.54, 0.0, 0.0),[None, None, None],
                             [None, None, None]]
@@ -83,6 +85,8 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
     def test_ecc_in_plane_elastic_q1_fnx(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
 
         force_nx = [(7.0, 6.5, 5.0),(-7.54, 0.0, 0.0),[None, None, None],
                             [None, None, None]]
@@ -117,6 +121,8 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
     def test_ecc_in_plane_elastic_q1_fpy(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
 
         force_py = [(7.0, 6.5, 5.0),(0.0, 2.34, 0.0),[None, None, None],
                             [None, None, None]]
@@ -151,6 +157,8 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
     def test_ecc_in_plane_elastic_q1_fny(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
 
         force_ny = [(7.0, 6.5, 5.0),(0.0, -2.34, 0.0),[None, None, None],
                             [None, None, None]]
@@ -186,6 +194,9 @@ class TestDemand(unittest.TestCase):
 
 #QUADRANT 2
     def test_ecc_in_plane_elastic_q2_fpx(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_px = [(2.0, 6.5, 5.0),(7.54, 0.0, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -219,6 +230,9 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
     def test_ecc_in_plane_elastic_q2_fnx(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_nx = [(2.0, 6.5, 5.0),(-7.54, 0.0, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -250,7 +264,11 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q3_ry, cbolt_q3_ry, places=3)
         self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
+
     def test_ecc_in_plane_elastic_q2_fpy(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_py = [(2.0, 6.5, 5.0),(0.0, 2.34, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -282,7 +300,11 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q3_ry, cbolt_q3_ry, places=3)
         self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
+
     def test_ecc_in_plane_elastic_q2_fny(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_ny = [(2.0, 6.5, 5.0),(0.0, -2.34, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -314,8 +336,12 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q3_ry, cbolt_q3_ry, places=3)
         self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
+
 #QUADRANT 3
     def test_ecc_in_plane_elastic_q3_fpx(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_px = [(2.0, 2.5, 5.0),(7.54, 0.0, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -349,6 +375,9 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
     def test_ecc_in_plane_elastic_q3_fnx(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_nx = [(2.0, 2.5, 5.0),(-7.54, 0.0, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -382,6 +411,9 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
     def test_ecc_in_plane_elastic_q3_fpy(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_py = [(2.0, 2.5, 5.0),(0.0, 2.34, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -415,6 +447,9 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
     def test_ecc_in_plane_elastic_q3_fny(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_ny = [(2.0, 2.5, 5.0),(0.0, -2.34, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -446,8 +481,12 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q3_ry, cbolt_q3_ry, places=3)
         self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
+
 #QUADRANT 4
     def test_ecc_in_plane_elastic_q4_fpx(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_px = [(7.0, 2.5, 5.0),(7.54, 0.0, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -481,6 +520,9 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
     def test_ecc_in_plane_elastic_q4_fnx(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_nx = [(7.0, 2.5, 5.0),(-7.54, 0.0, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -514,6 +556,9 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
     def test_ecc_in_plane_elastic_q4_fpy(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_py = [(7.0, 2.5, 5.0),(0.0, 2.34, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -547,6 +592,9 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
 
     def test_ecc_in_plane_elastic_q4_fny(self):
+        demand.calc_moments(self.bolts, self.force)
+        demand.calc_local_bolt_coords(self.bolts)
+
         force_ny = [(7.0, 2.5, 5.0),(0.0, -2.34, 0.0),[None, None, None],
                             [None, None, None]]
 
@@ -583,6 +631,8 @@ class TestDemand(unittest.TestCase):
         cmx = 77.885
         cmy = -30.0349
         cmz = -118.3
+
+        demand.calc_local_force_coords(self.bolts, self.force)
 
         demand.calc_moments(self.bolts, self.force)
 
@@ -644,6 +694,8 @@ class TestDemand(unittest.TestCase):
     def test_calc_ixx(self):
         cixx = 825.0
 
+        demand.calc_local_bolt_coords(self.bolts)
+
         ixx = demand.calc_ixx(self.bolts)
 
         self.assertEqual(cixx, ixx)
@@ -651,12 +703,16 @@ class TestDemand(unittest.TestCase):
     def test_calc_iyy(self):
         ciyy = 825.0
 
+        demand.calc_local_bolt_coords(self.bolts)
+
         iyy = demand.calc_iyy(self.bolts)
 
         self.assertEqual(ciyy, iyy)
 
     def test_calc_j(self):
         cj = 1650.0
+
+        demand.calc_local_bolt_coords(self.bolts)
 
         j = demand.calc_j(self.bolts)
 

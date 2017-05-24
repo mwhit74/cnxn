@@ -64,7 +64,8 @@ bolt = [bolt_num,
         (user_x, user_y),
         diameter,
         [local_x, local_y],
-        [Rx, Ry, Rz]]
+        [Rx, Ry, Rz],
+        de]
 
 force = [(user_x, user_y, user_z),
          (Px, Py, Pz),

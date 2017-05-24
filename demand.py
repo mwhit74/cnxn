@@ -54,9 +54,6 @@ def ecc_in_plane_elastic(bolts, force):
         None
 
     """
-    calc_moments(bolts, force)
-    calc_local_bolt_coords(bolts)
-
     mz = force[2][2]
 
     j = calc_j(bolts)
@@ -89,8 +86,6 @@ def calc_moments(bolts, force):
     Returns:
         None
     """
-    calc_local_force_coords(bolts, force)
-
     local_x = force[3][0]
     local_y = force[3][1]
     local_z = force[3][2]
@@ -107,8 +102,42 @@ def calc_moments(bolts, force):
     force[2][1] = my
     force[2][2] = mz
 
-def calc_instanteous_center(bolts):
+def calc_plastic_instanteous_center(bolts):
     pass
+
+def calc_elastic_instanteous_center_diff(bolts, force):
+    """Calculate x and y distance of the elastic IC from the centroid."""
+    j = calc_j(bolts)
+    #calc_moments(force)
+
+    num_bolts = len(bolts)
+
+    px = force[1][0]
+    py = force[1][1]
+    mz = force[2][2]
+
+    ax = -py/num_bolts*j/mz
+    ay = px/num_bolts*j/mz
+
+    return ax, ay
+
+def calc_elastic_coeff(bolts):
+
+def calc_d_eic(bolts, force):
+    """Calculate the distance from the bolt to the elastic instanteous center."""
+    ax, ay = calc_elastic_instanteous_center_diff(bolts, force)  
+
+    for bolt in bolts:
+      x = bolt[3][0] - ax
+      y = bolt[3][1] - ay
+
+      de = math.sqrt(math.pow(x,2) + math.pow(y,2))
+      
+      bolt[5] = de
+
+def calc_mp(force):
+    calc force coords about ic
+    calc moment about ic
 
 def calc_neutral_axis(bolts):
     pass
@@ -156,7 +185,6 @@ def calc_local_force_coords(bolts, force):
 
 def calc_ixx(bolts):
     """Calculate the 2nd moment of area of the bolt pattern about the x-axis."""
-    calc_local_bolt_coords(bolts)
     sum_ixx = 0.0
     for bolt in bolts:
         y = bolt[3][1]
@@ -165,7 +193,6 @@ def calc_ixx(bolts):
 
 def calc_iyy(bolts):
     """Calculate the 2nd moment of area of the bolt pattern about the y-axis."""
-    calc_local_bolt_coords(bolts)
     sum_iyy = 0.0
     for bolt in bolts:
         x = bolt[3][0]
