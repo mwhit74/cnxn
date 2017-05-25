@@ -626,7 +626,51 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q3_ry, cbolt_q3_ry, places=3)
         self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
-        
+       
+    def test_calc_plastic_instanteous_center(self):
+        pass
+
+    def test_calc_elastic_instanteous_center_diff(self):
+        demand.calc_moments(self.force)
+
+        ax, ay =  demand.calc_elastic_instanteous_center_diff(self.bolts,
+                                                              self.force)
+
+        cax = 0.33
+        cay = -1.05
+
+        self.assertAlmostEqual(cax, ax, places=3)
+        self.assertAlmostEqual(cay, ay, places=3)
+
+    def test_calc_elastic_coeff(self):
+        demand.calc_d_eci(self.bolts, self.force)
+
+        ce = demand.calc_elastic_coeff(self.bolts, self.force)
+
+        cce = 1.896
+
+        self.assertAlmostEqual(cce, ce, places=3)
+
+
+    def test_calc_d_eic(self):
+        demand.calc_d_eci(self.bolts, self.force)
+
+        cde = []
+
+        for cd, bolt in zip(cde, bolts):
+            de = bolt[5]
+
+            self.assertAlmostEqual(cd, de, places=3)
+
+    def test_calc_mp(self):
+        mp = demand.calc_mp(self.bolts, self.force)
+
+        c_mp = -127.0
+
+        self.assertAlmostEqual(c_mp, mp, places=3)
+
+
+#HELPER FUNCTIONS
     def test_calc_moments(self):
         cmx = 77.885
         cmy = -30.0349

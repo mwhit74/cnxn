@@ -67,8 +67,8 @@ bolt = [bolt_num,
         [Rx, Ry, Rz],
         de]
 
-force = [(user_x, user_y, user_z),
+force = [(user_x, user_y, user_z,
          (Px, Py, Pz),
          [Mx, My, Mz],
-         [local_x, local_y, local_y]]
+         [local_x, local_y, local_z]]
 

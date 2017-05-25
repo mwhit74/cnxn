@@ -23,11 +23,11 @@ def shear(bolts, force):
         px = force[1][0]
         py = force[1][1]
 
-        rx = -px/num_bolts
-        ry = -py/num_bolts
+        rex = -px/num_bolts
+        rey = -py/num_bolts
 
-        bolt[4][0] = rx
-        bolt[4][1] = ry
+        bolt[4][0] = rex
+        bolt[4][1] = rey
 
 def tension(bolts, force):
     pass
@@ -64,17 +64,148 @@ def ecc_in_plane_elastic(bolts, force):
 
         #px = py*local_xf*local_yb/j - px*local_yf*local_yb/j
         #py = py*local_xf*local_xb/j - px*local_yf*local_xb/j
-        rx = mz*local_yb/j
-        ry = -1*mz*local_xb/j
+        rex = mz*local_yb/j
+        rey = -1*mz*local_xb/j
 
-        bolt[4][0] = rx
-        bolt[4][1] = ry
+        bolt[4][0] = rex
+        bolt[4][1] = rey
 
 def ecc_in_plane_plastic(bolts, force):
+    px = force[1][0]
+    py = force[1][1]
+    mz = force[2][2]
+    x_ic, y_ic = calc_instanteous_center(bolts, px, py, mz)
+    mp = calc_mp(bolts, force, x_ic, y_ic)
+    calc_d(bolts, x_ic, y_ic)
+
+    error = 1.0
+    
+    while error > 0.01:
+
+        sum_rux, sum_ruy, sum_m = calc_reactions(bolts, mp)
+    
+        fx = px + sum_rux
+        fy = py + sum_ruy
+        mo = mz + sum_m
+
+        x_ic, y_ic = calc_instanteous_center(bolts, fx, fy, mo)
+        mp = calc_mp(force, x_ic, y_ic)
+
+        fx_error = abs(fx/px)
+        fy_error = abs(fy/py)
+        mo_error = abs(mo/mz)
+
+        error = max(fx_error, fy_error, mo_error)
+
+def calc_reactions(bolts, mp):
+    sum_rux = 0.0
+    sum_ruy = 0.0
+    sum_m = 0.0
+    d_max = calc_d_max(bolts)
+    for bolt in bolts:
+        d = bolt[6]
+        dx = bolt[5][0]
+        dy = bolt[5][1]
+
+        delta = 0.34*d/d_max
+        r = math.pow((1 - math.exp(-10*delta)),0.55) #ri/rult
+        m = r*d
+
+        rult = -mp/sum_m
+        rux = -dy/d*r*rult
+        ruy = -dx/d*r*rult
+
+        sum_rux = sum_rux + rux
+        sum_ruy = sum_ruy + ruy
+        sum_m = sum_m + m
+        
+        bolt[7] = delta
+        bolt[8] = r
+        bolt[9][0] = rux
+        bolt[9][1] = ruy
+
+    return sum_rux, sum_ruy, sum_m
+
+
+#def calc_elastic_coeff(bolts, force):
+#    """Calculate the elastic coefficient."""
+#    mp = calc_mp(bolts, force)
+#    sum_de_squared = calc_sum_de_squared(bolts)
+#    de_max = calc_d_eic_max(bolts)
+#
+#    ce = abs(sum_de_squared/(mp*de_max))
+#
+#    return ce
+
+
+def calc_d(bolts, x_ic, y_ic):
+    """Calculate the distance from the bolt to the elastic instanteous center."""
+
+    for bolt in bolts:
+        dx = bolt[3][0] - x_ic
+        dy = bolt[3][1] - y_ic
+
+        de = math.sqrt(math.pow(x,2) + math.pow(y,2))
+
+        bolt[5][0] = dx
+        bolt[5][1] = dy
+        bolt[6] = de
+
+
+def calc_d_max(bolts):
+    d_max = 0.0
+    for bolt in bolts:
+        d = bolt[6]
+        if d > d_max:
+            d_max = d
+
+    return d_max
+
+def calc_sum_d_squared(bolts):
+    sum_d_sqaured = 0.0
+    for bolt in bolts:
+        d = bolt[6]
+        sum_d_squared = sum_d_squared + math.pow(de, 2)
+
+    return sum_d_squared
+
+def calc_mp(force, x_ic, y_ic):
+    """Calculate the moment about the elastic instanteous center."""
+    x = force[3][0]
+    y = force[3][1]
+
+    px = force[1][0]
+    py = force[1][1]
+
+    x1 = x - x_ic
+    y1 = y - y_ic
+
+    mp = py*x1 - px*y1
+
+    return mp
+
+def calc_instanteous_center(bolts, fx, fy, mo):
+    """Calculate the instanteous center with respect to the centroid."""
+    x0 = 0.0
+    y0 = 0.0
+    j = calc_j(bolts)
+
+    num_bolts = len(bolts)
+
+    ax = -fy/num_bolts*j/mo
+    ay = fx/num_bolts*j/mo
+
+    x1 = x0 + ax
+    y1 = y0 + ax
+
+    return x1, y1
+
+
+def calc_neutral_axis(bolts):
     pass
 
 def calc_moments(bolts, force):
-    """Calculate the x, y, and z moments.
+    """Calculate the x, y, and z moments about the centroid of the bolt group.
 
     mx = pz(y) - py(z)
     my = px(z) - pz(x)
@@ -101,46 +232,6 @@ def calc_moments(bolts, force):
     force[2][0] = mx
     force[2][1] = my
     force[2][2] = mz
-
-def calc_plastic_instanteous_center(bolts):
-    pass
-
-def calc_elastic_instanteous_center_diff(bolts, force):
-    """Calculate x and y distance of the elastic IC from the centroid."""
-    j = calc_j(bolts)
-    #calc_moments(force)
-
-    num_bolts = len(bolts)
-
-    px = force[1][0]
-    py = force[1][1]
-    mz = force[2][2]
-
-    ax = -py/num_bolts*j/mz
-    ay = px/num_bolts*j/mz
-
-    return ax, ay
-
-def calc_elastic_coeff(bolts):
-
-def calc_d_eic(bolts, force):
-    """Calculate the distance from the bolt to the elastic instanteous center."""
-    ax, ay = calc_elastic_instanteous_center_diff(bolts, force)  
-
-    for bolt in bolts:
-      x = bolt[3][0] - ax
-      y = bolt[3][1] - ay
-
-      de = math.sqrt(math.pow(x,2) + math.pow(y,2))
-      
-      bolt[5] = de
-
-def calc_mp(force):
-    calc force coords about ic
-    calc moment about ic
-
-def calc_neutral_axis(bolts):
-    pass
 
 def calc_centroid(bolts):
     """Calculate the centroid of the bolt group."""
