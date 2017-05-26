@@ -74,6 +74,7 @@ def ecc_in_plane_plastic(bolts, force):
     px = force[1][0]
     py = force[1][1]
     mz = force[2][2]
+    p_vector = math.sqrt(math.pow(px,2) + math.pow(py,2))
     x_ic, y_ic = calc_instanteous_center(bolts, px, py, mz)
     mp = calc_mp(bolts, force, x_ic, y_ic)
     calc_d(bolts, x_ic, y_ic)
@@ -86,56 +87,57 @@ def ecc_in_plane_plastic(bolts, force):
     
         fx = px + sum_rux
         fy = py + sum_ruy
-        mo = mz + sum_m
+        f_vector = math.sqrt(math.pow(fx,2) + math.pow(fy,2))
 
         x_ic, y_ic = calc_instanteous_center(bolts, fx, fy, mo)
         mp = calc_mp(force, x_ic, y_ic)
 
         fx_error = abs(fx/px)
         fy_error = abs(fy/py)
-        mo_error = abs(mo/mz)
+        fv_error = abs((p_vector-f_vector)/p_vector)
 
-        error = max(fx_error, fy_error, mo_error)
+        error = max(fx_error, fy_error, fv_error)
 
 def calc_reactions(bolts, mp):
+    sum_m = calc_moment_about_ic(bolts)
+
     sum_rux = 0.0
     sum_ruy = 0.0
-    sum_m = 0.0
-    d_max = calc_d_max(bolts)
+    
     for bolt in bolts:
         d = bolt[6]
         dx = bolt[5][0]
         dy = bolt[5][1]
-
-        delta = 0.34*d/d_max
-        r = math.pow((1 - math.exp(-10*delta)),0.55) #ri/rult
-        m = r*d
+        r = bolt[8]
 
         rult = -mp/sum_m
         rux = -dy/d*r*rult
-        ruy = -dx/d*r*rult
+        ruy = dx/d*r*rult
 
         sum_rux = sum_rux + rux
         sum_ruy = sum_ruy + ruy
-        sum_m = sum_m + m
         
-        bolt[7] = delta
-        bolt[8] = r
         bolt[9][0] = rux
         bolt[9][1] = ruy
 
     return sum_rux, sum_ruy, sum_m
 
+def calc_moment_about_ic(bolts)
+    sum_m = 0.0
+    d_max = calc_d_max(bolts)
+    for bolt in bolts:
+        d = bolt[6]
 
-#def calc_elastic_coeff(bolts, force):
-#    """Calculate the elastic coefficient."""
-#    mp = calc_mp(bolts, force)
-#    sum_de_squared = calc_sum_de_squared(bolts)
-#    de_max = calc_d_eic_max(bolts)
-#
-#    ce = abs(sum_de_squared/(mp*de_max))
-#
-#    return ce
+        delta = 0.34*d/d_max
+        r = math.pow((1 - math.exp(-10*delta)),0.55) #ri/rult
+        m = r*d
+
+        sum_m = sum_m + m
+        
+        bolt[7] = delta
+        bolt[8] = r
+
+    return sum_m
 
 
 def calc_d(bolts, x_ic, y_ic):
@@ -145,29 +147,29 @@ def calc_d(bolts, x_ic, y_ic):
         dx = bolt[3][0] - x_ic
         dy = bolt[3][1] - y_ic
 
-        de = math.sqrt(math.pow(x,2) + math.pow(y,2))
+        d = math.sqrt(math.pow(x,2) + math.pow(y,2))
 
         bolt[5][0] = dx
         bolt[5][1] = dy
-        bolt[6] = de
+        bolt[6] = d
 
 
-def calc_d_max(bolts):
-    d_max = 0.0
-    for bolt in bolts:
-        d = bolt[6]
-        if d > d_max:
-            d_max = d
-
-    return d_max
-
-def calc_sum_d_squared(bolts):
-    sum_d_sqaured = 0.0
-    for bolt in bolts:
-        d = bolt[6]
-        sum_d_squared = sum_d_squared + math.pow(de, 2)
-
-    return sum_d_squared
+#def calc_d_max(bolts):
+#    d_max = 0.0
+#    for bolt in bolts:
+#        d = bolt[6]
+#        if d > d_max:
+#            d_max = d
+#
+#    return d_max
+#
+#def calc_sum_d_squared(bolts):
+#    sum_d_sqaured = 0.0
+#    for bolt in bolts:
+#        d = bolt[6]
+#        sum_d_squared = sum_d_squared + math.pow(de, 2)
+#
+#    return sum_d_squared
 
 def calc_mp(force, x_ic, y_ic):
     """Calculate the moment about the elastic instanteous center."""
