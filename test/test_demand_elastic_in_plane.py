@@ -3,7 +3,7 @@ import unittest
 import pdb
 import os.path
 
-class TestDemand(unittest.TestCase):
+class TestDemandElasticInPlane(unittest.TestCase):
     def setUp(self):
         d = 1.25
         self.bolts = []
@@ -627,49 +627,6 @@ class TestDemand(unittest.TestCase):
         self.assertAlmostEqual(bolt_q4_rx, cbolt_q4_rx, places=3)
         self.assertAlmostEqual(bolt_q4_ry, cbolt_q4_ry, places=3)
        
-    def test_calc_plastic_instanteous_center(self):
-        pass
-
-    def test_calc_elastic_instanteous_center_diff(self):
-        demand.calc_moments(self.force)
-
-        ax, ay =  demand.calc_elastic_instanteous_center_diff(self.bolts,
-                                                              self.force)
-
-        cax = 0.33
-        cay = -1.05
-
-        self.assertAlmostEqual(cax, ax, places=3)
-        self.assertAlmostEqual(cay, ay, places=3)
-
-    def test_calc_elastic_coeff(self):
-        demand.calc_d_eci(self.bolts, self.force)
-
-        ce = demand.calc_elastic_coeff(self.bolts, self.force)
-
-        cce = 1.896
-
-        self.assertAlmostEqual(cce, ce, places=3)
-
-
-    def test_calc_d_eic(self):
-        demand.calc_d_eci(self.bolts, self.force)
-
-        cde = []
-
-        for cd, bolt in zip(cde, bolts):
-            de = bolt[5]
-
-            self.assertAlmostEqual(cd, de, places=3)
-
-    def test_calc_mp(self):
-        mp = demand.calc_mp(self.bolts, self.force)
-
-        c_mp = -127.0
-
-        self.assertAlmostEqual(c_mp, mp, places=3)
-
-
 #HELPER FUNCTIONS
     def test_calc_moments(self):
         cmx = 77.885
@@ -698,19 +655,27 @@ class TestDemand(unittest.TestCase):
         self.assertEqual(cy_cent, y_cent)
 
     def test_local_bolt_coords(self):
-        cx_coords = []
-        cy_coords = []
-        __location__ = os.path.realpath(
-                        os.path.join(os.getcwd(), os.path.dirname(__file__)))
-        with open(os.path.join(__location__, r'local_bolt_coords.txt'), 'rb') as ifile:
-            data = ifile.readlines()
-            for line in data:
-                x = float(line.split("\t")[0].strip())
-                y = float(line.split("\t")[1].strip())
-                cx_coords.append(x)
-                cy_coords.append(y)
-            ifile.close()
-
+        
+        cx_coords = [-4.50,-4.50,-4.50,-4.50,-4.50,-4.50,-4.50,-4.50,-4.50,-4.50,
+                    -3.50,-3.50,-3.50,-3.50,-3.50,-3.50,-3.50,-3.50,-3.50,-3.50,
+                    -2.50,-2.50,-2.50,-2.50,-2.50,-2.50,-2.50,-2.50,-2.50,-2.50,
+                    -1.50,-1.50,-1.50,-1.50,-1.50,-1.50,-1.50,-1.50,-1.50,-1.50,
+                    -0.50,-0.50,-0.50,-0.50,-0.50,-0.50,-0.50,-0.50,-0.50,-0.50,
+                    0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,
+                    1.50,1.50,1.50,1.50,1.50,1.50,1.50,1.50,1.50,1.50,
+                    2.50,2.50,2.50,2.50,2.50,2.50,2.50,2.50,2.50,2.50,
+                    3.50,3.50,3.50,3.50,3.50,3.50,3.50,3.50,3.50,3.50,
+                    4.50,4.50,4.50,4.50,4.50,4.50,4.50,4.50,4.50,4.50]	
+        cy_coords = [-4.50,-3.50,-2.50,-1.50,-0.50,0.50,1.50,2.50,3.50,4.50
+                     -4.50,-3.50,-2.50,-1.50,-0.50,0.50,1.50,2.50,3.50,4.50
+                     -4.50,-3.50,-2.50,-1.50,-0.50,0.50,1.50,2.50,3.50,4.50
+                     -4.50,-3.50,-2.50,-1.50,-0.50,0.50,1.50,2.50,3.50,4.50
+                     -4.50,-3.50,-2.50,-1.50,-0.50,0.50,1.50,2.50,3.50,4.50
+                     -4.50,-3.50,-2.50,-1.50,-0.50,0.50,1.50,2.50,3.50,4.50
+                     -4.50,-3.50,-2.50,-1.50,-0.50,0.50,1.50,2.50,3.50,4.50
+                     -4.50,-3.50,-2.50,-1.50,-0.50,0.50,1.50,2.50,3.50,4.50
+                     -4.50,-3.50,-2.50,-1.50,-0.50,0.50,1.50,2.50,3.50,4.50
+                     -4.50,-3.50,-2.50,-1.50,-0.50,0.50,1.50,2.50,3.50,4.50]
 
         demand.calc_local_bolt_coords(self.bolts)
         
