@@ -16,7 +16,8 @@ Definitions:
                          (user_x, user_y),
                          diameter,
                          [xc, yc],
-                         [Rex, Rey, Rez],
+                         [Rsx, Rsy],
+                         [Rex, Rey],
                          [dx, dy],
                          de,
                          delta,
@@ -31,9 +32,14 @@ Definitions:
     diameter (float): diameter of bolt 
     xc (float): bolt x-coordinate with respect to the centroid of the bolt group
     yc (float): bolt y-coordinate with respect to the centroid of the bolt group
-    Rex (float): the elastic shear reaction on the bolt in the x-direction
-    Rey (float): the elastic shear reaction on the bolt in the y-direction
-    Rez (float): the elastic tensile reaction on the bolt in the z-direction
+    Rsx (float): the elastic shear reaction on the bolt in the x-direction due
+                 to a direct shear load
+    Rsy (float): the elastic shear reaction on the bolt in the y-direction due
+                 to a direct shear load
+    Rex (float): the elastic shear reaction on the bolt in the x-direction due
+                 to an eccentric load in the plane of the connection
+    Rey (float): the elastic shear reaction on the bolt in the y-direction due
+                 to an eccentric load in the plane of the connection
     dx (float): bolt x-coordinate with respect to the IC of the bolt group
     dy (float): bolt y-coordinate with respect to the IC of the bolt group
     d (float): distance from the IC to the bolt, sqrt(dx^2 + dy^2)
@@ -74,23 +80,25 @@ def shear(bolts, force):
     ry = py/num_bolts
 
     Args:
-        bolts (list): List of the bolts in the connetion conforming to the
-                        prescribed data structure for a bolt
-        force (data struct): Data structure using a list to hold the force
-                                attributes
+        bolts (data struct): list of the bolt data structure
+        force (data struct): single force data structure
+
     Returns:
         None
+
+    Notes:
+        Populates the 
     """
     num_bolts = len(bolts)
     for bolt in bolts:
         px = force[1][0]
         py = force[1][1]
 
-        rex = -px/num_bolts
-        rey = -py/num_bolts
+        rsx = -px/num_bolts
+        rsy = -py/num_bolts
 
-        bolt[4][0] = rex
-        bolt[4][1] = rey
+        bolt[4][0] = rsx
+        bolt[4][1] = rsy
 
 def tension(bolts, force):
     pass
@@ -109,10 +117,9 @@ def ecc_in_plane_elastic(bolts, force):
     The rx is multiplied by -1 due to the coordinate system used for this program. 
 
     Args:
-        bolts (list): List of the bolts in the connetion conforming to the
-                        prescribed data structure for a bolt
-        force (data struct): Data structure using a list to hold the force
-                                attributes
+        bolts (data struct): list of the bolt data structure
+        force (data struct): single force data structure
+
     Returns:
         None
 
@@ -130,8 +137,8 @@ def ecc_in_plane_elastic(bolts, force):
         rex = mz*local_yb/j
         rey = -1*mz*local_xb/j
 
-        bolt[4][0] = rex
-        bolt[4][1] = rey
+        bolt[5][0] = rex
+        bolt[5][1] = rey
 
 def calc_moments_about_centroid(bolts, force):
     """Calculate the x, y, and z moments about the centroid of the bolt group.
@@ -343,10 +350,10 @@ def calc_plastic_reactions(bolts, mp):
     sum_ruy = 0.0
     
     for bolt in bolts:
-        d = bolt[6]
-        dx = bolt[5][0]
-        dy = bolt[5][1]
-        r = bolt[8]
+        d = bolt[7]
+        dx = bolt[6][0]
+        dy = bolt[6][1]
+        r = bolt[9]
 
         rult = -mp/sum_m
         rux = -dy/d*r*rult
@@ -355,8 +362,8 @@ def calc_plastic_reactions(bolts, mp):
         sum_rux = sum_rux + rux
         sum_ruy = sum_ruy + ruy
         
-        bolt[9][0] = rux #updating reaction based on new ic location
-        bolt[9][1] = ruy #updating reaction based on new ic location
+        bolt[10][0] = rux #updating reaction based on new ic location
+        bolt[10][1] = ruy #updating reaction based on new ic location
 
     return sum_rux, sum_ruy, sum_m
 
@@ -365,7 +372,7 @@ def calc_moment_about_ic(bolts):
     sum_m = 0.0
     d_max = calc_d_max(bolts)
     for bolt in bolts:
-        d = bolt[6]
+        d = bolt[7]
 
         delta = 0.34*d/d_max
         r = math.pow((1 - math.exp(-10*delta)),0.55) #ri/rult
@@ -373,8 +380,8 @@ def calc_moment_about_ic(bolts):
 
         sum_m = sum_m + m
         
-        bolt[7] = delta
-        bolt[8] = r
+        bolt[8] = delta
+        bolt[9] = r
 
     return sum_m
 
@@ -388,9 +395,9 @@ def calc_d(bolts, x_ic, y_ic):
 
         d = math.sqrt(math.pow(dx,2) + math.pow(dy,2))
 
-        bolt[5][0] = dx
-        bolt[5][1] = dy
-        bolt[6] = d
+        bolt[6][0] = dx
+        bolt[6][1] = dy
+        bolt[7] = d
 
 def calc_mp(force, x_ic, y_ic):
     """Calculate the moment about the instanteous center."""
