@@ -1,3 +1,66 @@
+# -*- coding: utf-8 -*-
+"""The demand module assists in calculating the demand on each bolt due to
+different loading geometries for simple bolt connections. The different
+geometries include:
+    * shear
+    * eccentricity in the plane of the faying surface
+        + elastic
+        + plastic
+    * eccentricity normal to the plane of the faying surface
+        + neutral axis not at c.g.
+        + neutral axis assumed at c.g.
+        + considerting initial tension
+
+Definitions:
+    bolt (data struct): [bolt_num,
+                         (user_x, user_y),
+                         diameter,
+                         [xc, yc],
+                         [Rex, Rey, Rez],
+                         [dx, dy],
+                         de,
+                         delta,
+                         r,
+                         [Rux, Ruy]]
+
+    bolt num (int): bolt number for user identification purposes
+    user_x (float): user entered x-coordinate for bolt based on user coordinate
+                    system
+    user_y (float): user entered y-coordinate for bolt based on user coordinate
+                    system
+    diameter (float): diameter of bolt 
+    xc (float): bolt x-coordinate with respect to the centroid of the bolt group
+    yc (float): bolt y-coordinate with respect to the centroid of the bolt group
+    Rex (float): the elastic shear reaction on the bolt in the x-direction
+    Rey (float): the elastic shear reaction on the bolt in the y-direction
+    Rez (float): the elastic tensile reaction on the bolt in the z-direction
+    dx (float): bolt x-coordinate with respect to the IC of the bolt group
+    dy (float): bolt y-coordinate with respect to the IC of the bolt group
+    d (float): distance from the IC to the bolt, sqrt(dx^2 + dy^2)
+    delta (float): deformation of the fastner
+    r (float): Ri/Rult ratio
+    Rux (float): the plastic shear reaction on the bolt in the x-direction
+    Ruy (float): the plastic shear reaction on the bolt in the y-direction
+
+    force (data struct): [(user_x, user_y, user_z,
+                          (Px, Py, Pz),
+                          [Mx, My, Mz],
+                          [local_x, local_y, local_z]]
+    
+    user_x (float): user entered x-coordinate of force application point based
+                    on the user coordinate system
+    user_y (float): user entered y-coordinate of force application point based
+                    on the user coordinate system
+    user_z (float): user entered z-coordinate of force application point based
+                    on the user coordinate system
+    Px (float): user entered force in the x-direction
+    Py (float): user entered force in the y-direction
+    Pz (float): user entered force in the z-direction
+    Mx (float): elastic moment about the x-axis 
+    My (float): elastic moment about the y-axis
+    Mz (float): elastic moment about the z-axis passing thru the centroid of the
+                bolt group
+"""
 import math
 
 def shear(bolts, force):
@@ -100,7 +163,18 @@ def calc_moments_about_centroid(bolts, force):
     force[2][2] = mz
 
 def calc_centroid(bolts):
-    """Calculate the centroid of the bolt group."""
+    """Calculate the centroid of the bolt group.
+    
+    Args:
+        bolts (data struct): list of the bolt data structure
+
+    Returns:
+        x_centroid (float): x-coordinate of bolt group centroid
+        y_centroid (float): y-coordinate of bolt group centroid
+
+        This coordinate pair is returned as a tuple, as follows:
+        (x_centroid, y_centroid)
+    """
     sum_x = 0.0
     sum_y = 0.0
     num_bolts = len(bolts)
@@ -110,10 +184,24 @@ def calc_centroid(bolts):
         sum_x = sum_x + x
         sum_y = sum_y + y
 
-    return sum_x/num_bolts, sum_y/num_bolts
+    x_centroid = sum_x/num_bolts
+    y_centroid = sum_y/num_bolts
+
+    return x_centroid, y_centroid
 
 def calc_local_bolt_coords(bolts):
-    """Calculate bolt coords with the centroid of the bolt group as the origin."""
+    """Calculate bolt coords with the centroid of the bolt group as the origin.
+    
+    Args:
+        bolts ():
+
+    Returns:
+        None
+
+    Notes:
+        Populates the x and y coordinate location of each bolt data structure
+        with respect to the centroid of the bolt group
+    """
     x_cent, y_cent = calc_centroid(bolts)
 
     for bolt in bolts:
@@ -125,7 +213,19 @@ def calc_local_bolt_coords(bolts):
         bolt[3][1] = local_y
 
 def calc_local_force_coords(bolts, force):
-    """Calculate force coords with the centroid of the bolt group as origin."""
+    """Calculate force coords with the centroid of the bolt group as origin.
+    
+    Args:
+        bolts ():
+        force (data struct):
+
+    Returns:
+        None
+
+    Notes:
+        Populates the x, y, and z coordinate location of the force data
+        structure with respect to the centroid of the bolt group
+    """
     x_cent, y_cent = calc_centroid(bolts)
 
     user_x = force[0][0]
@@ -141,7 +241,24 @@ def calc_local_force_coords(bolts, force):
     force[3][2] = local_z
 
 def calc_ixx(bolts):
-    """Calculate the 2nd moment of area of the bolt pattern about the x-axis."""
+    """Calculate the 2nd moment of area of the bolt pattern about the x-axis.
+   
+    Assumes all bolts are the same diameter.
+
+    Args:
+        bolts ():
+
+    Returns:
+        sum_ixx (float): 2nd moment of area of bolt pattern about the x-axis
+
+    Raises:
+        ValueError
+
+    Notes:
+        Must call calc_local_force_coords to populate the y-coordinate with
+        respect to the centroid in the bolt data structure before calling this
+        function.
+    """
     sum_ixx = 0.0
     for bolt in bolts:
         y = bolt[3][1]
@@ -149,7 +266,21 @@ def calc_ixx(bolts):
     return sum_ixx
 
 def calc_iyy(bolts):
-    """Calculate the 2nd moment of area of the bolt pattern about the y-axis."""
+    """Calculate the 2nd moment of area of the bolt pattern about the y-axis.
+   
+    Assumes all bolts are the same diameter.
+
+    Args:
+        bolts ():
+
+    Returns:
+        sum_iyy (float): 2nd moment of area of the bolt pattern about the y-axis
+
+    Notes:
+        Must call calc_local_force_coords to populate the x-coordinate with
+        respect to the centroid in the bolt data structure before calling this
+        function.
+    """
     sum_iyy = 0.0
     for bolt in bolts:
         x = bolt[3][0]
@@ -157,10 +288,23 @@ def calc_iyy(bolts):
     return sum_iyy
 
 def calc_j(bolts):
-    """Calculate the polar moment of area of bolt pattern about the z-axis."""
+    """Calculate the polar moment of area of bolt pattern about the z-axis.
+    
+    Args:
+        bolts ():
+
+    Returns:
+        j (float): polar moment of area of the bolt pattern about the z-axis
+
+    Notes:
+        Must call calc_local_force_coords to populate the x and y coordinate
+        with respect to the centroid in the bolt data structure before calling
+        this function.
+    """
     ixx = calc_ixx(bolts)
     iyy = calc_iyy(bolts)
-    return ixx + iyy
+    j = ixx + iyy
+    return j
 
 def ecc_in_plane_plastic(bolts, force):
     """Calculate the maximum bolt force based on plastic bolt deformation."""
