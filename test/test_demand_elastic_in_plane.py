@@ -5,13 +5,22 @@ import os.path
 
 class TestDemandElasticInPlane(unittest.TestCase):
     def setUp(self):
-        d = 1.25
+        diameter = 1.25
         self.bolts = []
         for x in xrange(0,10):
             for y in xrange(0,10):
                 bolt_num = float(x+y+1)
-                self.bolts.append([bolt_num,(float(x),float(y)),d,[None, None],
-                                    [None, None, None]])
+                self.bolts.append([bolt_num,
+                                   (float(x),float(y)),
+                                   diameter, 
+                                   [None, None],
+                                   [None, None],
+                                   [None, None],
+                                   [None, None],
+                                   None,
+                                   None,
+                                   None,
+                                   [None, None]])
 
         self.force = [(20.0, 25.0, 5.0),(7.54, 2.34, 4.37),[None, None, None],
                 [None, None, None]]
@@ -54,19 +63,19 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_px)
-        demand.calc_moments_about_centroid(self.bolts, force_px)
+        demand.calc_moments_about_centroid(force_px)
         demand.calc_local_bolt_coords(self.bolts)
 
         demand.ecc_in_plane_elastic(self.bolts, force_px)
 
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = -0.03198
         cbolt_q1_ry = 0.03198
@@ -92,20 +101,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_nx)
-        demand.calc_moments_about_centroid(self.bolts, force_nx)
+        demand.calc_moments_about_centroid(force_nx)
         demand.calc_local_bolt_coords(self.bolts)
 
         
         demand.ecc_in_plane_elastic(self.bolts, force_nx)
 
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = 0.03198
         cbolt_q1_ry = -0.03198
@@ -131,20 +140,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_py)
-        demand.calc_moments_about_centroid(self.bolts, force_py)
+        demand.calc_moments_about_centroid(force_py)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_py)
 
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = 0.012409 
         cbolt_q1_ry = -0.012409
@@ -170,20 +179,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_ny)
-        demand.calc_moments_about_centroid(self.bolts, force_ny)
+        demand.calc_moments_about_centroid(force_ny)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_ny)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = -0.012409
         cbolt_q1_ry = 0.012409
@@ -210,20 +219,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_px)
-        demand.calc_moments_about_centroid(self.bolts, force_px)
+        demand.calc_moments_about_centroid(force_px)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_px)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = -0.031988
         cbolt_q1_ry = 0.031988
@@ -249,20 +258,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_nx)
-        demand.calc_moments_about_centroid(self.bolts, force_nx)
+        demand.calc_moments_about_centroid(force_nx)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_nx)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = 0.031988
         cbolt_q1_ry = -0.031988
@@ -288,20 +297,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_py)
-        demand.calc_moments_about_centroid(self.bolts, force_py)
+        demand.calc_moments_about_centroid(force_py)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_py)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = -0.012409
         cbolt_q1_ry = 0.012409
@@ -327,20 +336,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_ny)
-        demand.calc_moments_about_centroid(self.bolts, force_ny)
+        demand.calc_moments_about_centroid(force_ny)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_ny)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = 0.012409
         cbolt_q1_ry = -0.012409
@@ -367,20 +376,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_px)
-        demand.calc_moments_about_centroid(self.bolts, force_px)
+        demand.calc_moments_about_centroid(force_px)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_px)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = 0.031988
         cbolt_q1_ry = -0.031988
@@ -406,20 +415,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_nx)
-        demand.calc_moments_about_centroid(self.bolts, force_nx)
+        demand.calc_moments_about_centroid(force_nx)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_nx)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = -0.031988
         cbolt_q1_ry = 0.031988
@@ -445,20 +454,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_py)
-        demand.calc_moments_about_centroid(self.bolts, force_py)
+        demand.calc_moments_about_centroid(force_py)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_py)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = -0.012409
         cbolt_q1_ry = 0.012409
@@ -484,20 +493,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_ny)
-        demand.calc_moments_about_centroid(self.bolts, force_ny)
+        demand.calc_moments_about_centroid(force_ny)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_ny)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = 0.012409
         cbolt_q1_ry = -0.012409
@@ -524,20 +533,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_px)
-        demand.calc_moments_about_centroid(self.bolts, force_px)
+        demand.calc_moments_about_centroid(force_px)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_px)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = 0.031988
         cbolt_q1_ry = -0.031988
@@ -563,20 +572,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_nx)
-        demand.calc_moments_about_centroid(self.bolts, force_nx)
+        demand.calc_moments_about_centroid(force_nx)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_nx)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = -0.031988
         cbolt_q1_ry = 0.031988
@@ -602,20 +611,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_py)
-        demand.calc_moments_about_centroid(self.bolts, force_py)
+        demand.calc_moments_about_centroid(force_py)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_py)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = 0.012409
         cbolt_q1_ry = -0.012409
@@ -641,20 +650,20 @@ class TestDemandElasticInPlane(unittest.TestCase):
         demand.calc_local_bolt_coords(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_local_force_coords(self.bolts,force_ny)
-        demand.calc_moments_about_centroid(self.bolts, force_ny)
+        demand.calc_moments_about_centroid(force_ny)
         demand.calc_local_bolt_coords(self.bolts)
 
 
         demand.ecc_in_plane_elastic(self.bolts, force_ny)
     
-        bolt_q1_rx = self.bolts[88][4][0]
-        bolt_q1_ry = self.bolts[88][4][1]
-        bolt_q2_rx = self.bolts[18][4][0]
-        bolt_q2_ry = self.bolts[18][4][1]
-        bolt_q3_rx = self.bolts[11][4][0]
-        bolt_q3_ry = self.bolts[11][4][1]
-        bolt_q4_rx = self.bolts[81][4][0]
-        bolt_q4_ry = self.bolts[81][4][1]
+        bolt_q1_rx = self.bolts[88][5][0]
+        bolt_q1_ry = self.bolts[88][5][1]
+        bolt_q2_rx = self.bolts[18][5][0]
+        bolt_q2_ry = self.bolts[18][5][1]
+        bolt_q3_rx = self.bolts[11][5][0]
+        bolt_q3_ry = self.bolts[11][5][1]
+        bolt_q4_rx = self.bolts[81][5][0]
+        bolt_q4_ry = self.bolts[81][5][1]
 
         cbolt_q1_rx = -0.012409
         cbolt_q1_ry = 0.012409
@@ -682,7 +691,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
         demand.calc_local_force_coords(self.bolts, self.force)
 
-        demand.calc_moments_about_centroid(self.bolts, self.force)
+        demand.calc_moments_about_centroid(self.force)
 
         mx = self.force[2][0]
         my = self.force[2][1]
