@@ -66,6 +66,16 @@ Definitions:
     My (float): elastic moment about the y-axis
     Mz (float): elastic moment about the z-axis passing thru the centroid of the
                 bolt group
+
+Notes:
+    The idea behind the design of the data structure used for the bolt and force
+    is the need to keep track of results calculated relative to each bolt or
+    force. Properties of the bolt pattern can be calculated at any time based on
+    the bolts in the pattern. 
+
+    There has been consideration to create a third data structure called
+    bolt pattern to keep track of the properties of the bolt pattern but at this
+    time it does not seem necessary. 
 """
 import math
 
