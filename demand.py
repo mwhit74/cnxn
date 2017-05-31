@@ -97,7 +97,8 @@ def shear(bolts, force):
         None
 
     Notes:
-        Populates the 
+        Populates the direct shear reactions Rsx and Rsy in the bolt data
+        structure
     """
     num_bolts = len(bolts)
     for bolt in bolts:
@@ -132,7 +133,10 @@ def ecc_in_plane_elastic(bolts, force):
 
     Returns:
         None
-
+        
+    Notes:
+        Populates the elastic eccentric force in the plane reations Rex and Rey
+        in the bolt data structure
     """
     mz = force[2][2]
 
@@ -150,7 +154,7 @@ def ecc_in_plane_elastic(bolts, force):
         bolt[5][0] = rex
         bolt[5][1] = rey
 
-def calc_moments_about_centroid(bolts, force):
+def calc_moments_about_centroid(force):
     """Calculate the x, y, and z moments about the centroid of the bolt group.
 
     mx = pz(y) - py(z)
@@ -158,10 +162,14 @@ def calc_moments_about_centroid(bolts, force):
     mz = py(x) - px(y)
 
     Args:
-        force (data struct): Data structure using a list to hold the force
-                                attributes
+        force (data struct): single force data structure attributes
+
     Returns:
         None
+
+    Notes:
+        Populates the moments about each axis Mx, My, and Mz in the force data
+        structure
     """
     local_x = force[3][0]
     local_y = force[3][1]
@@ -210,7 +218,7 @@ def calc_local_bolt_coords(bolts):
     """Calculate bolt coords with the centroid of the bolt group as the origin.
     
     Args:
-        bolts ():
+        bolts (data struct): list of the bolt data structure
 
     Returns:
         None
@@ -233,8 +241,8 @@ def calc_local_force_coords(bolts, force):
     """Calculate force coords with the centroid of the bolt group as origin.
     
     Args:
-        bolts ():
-        force (data struct):
+        bolts (data struct): list of the bolt data structure
+        force (data struct): single force data structure attributes
 
     Returns:
         None
@@ -263,13 +271,12 @@ def calc_ixx(bolts):
     Assumes all bolts are the same diameter.
 
     Args:
-        bolts ():
+        bolts (data struct): list of the bolt data structure
 
     Returns:
         sum_ixx (float): 2nd moment of area of bolt pattern about the x-axis
 
     Raises:
-        ValueError
 
     Notes:
         Must call calc_local_force_coords to populate the y-coordinate with
@@ -288,10 +295,12 @@ def calc_iyy(bolts):
     Assumes all bolts are the same diameter.
 
     Args:
-        bolts ():
+        bolts (data struct): list of the bolt data structure
 
     Returns:
         sum_iyy (float): 2nd moment of area of the bolt pattern about the y-axis
+
+    Raises:
 
     Notes:
         Must call calc_local_force_coords to populate the x-coordinate with
@@ -308,10 +317,12 @@ def calc_j(bolts):
     """Calculate the polar moment of area of bolt pattern about the z-axis.
     
     Args:
-        bolts ():
+        bolts (data struct): list of the bolt data structure
 
     Returns:
         j (float): polar moment of area of the bolt pattern about the z-axis
+
+    Raises:
 
     Notes:
         Must call calc_local_force_coords to populate the x and y coordinate
@@ -328,12 +339,15 @@ def ecc_in_plane_plastic(bolts, force):
     px = force[1][0]
     py = force[1][1]
     mo = force[2][2]
-    p_vector = math.sqrt(math.pow(px,2) + math.pow(py,2))
-    x1, y1 = calc_instanteous_center(bolts, px, py, mo)
+    x0 = 0.0 #coordinate system centered on centroid
+    y0 = 0.0 #coordinate system centered on centroid
+    x1, y1 = calc_instanteous_center(bolts, px, py, mo, x0, y0)
     mp = calc_mp(bolts, force, x1, y1)
     calc_d(bolts, x_ic, y_ic)
+    delta_angle = math.tan(px/py)
 
     error = 1.0
+    count = 0
     
     while error > 0.01:
 
@@ -341,16 +355,30 @@ def ecc_in_plane_plastic(bolts, force):
     
         fx = px + sum_rux
         fy = py + sum_ruy
-        f_vector = math.sqrt(math.pow(fx,2) + math.pow(fy,2))
 
-        x2, y2 = calc_instanteous_center(bolts, fx, fy, mo)
-        mp = calc_mp(force, x2, y2)
+        x2, y2 = calc_instanteous_center(bolts, fx, fy, mo, x1, y1)
+        calc_r(force, x2, y2)
+        mp = calc_mp(force)
+        r = force[5]
 
-        fx_error = abs(fx/px)
-        fy_error = abs(fy/py)
-        fv_error = abs((p_vector-f_vector)/p_vector)
+        x1 = x2
+        y1 = y2
 
-        error = max(fx_error, fy_error, fv_error)
+        pfx = sum_rux/math.sin(delta_angle)
+        pfy = sum_ruy/math.cos(delta_angle)
+        pm = sum_m/r
+
+        e1 = abs(pfx - pfy)
+        e2 = abs(pfx - pm)
+        e3 = abs(pfy - pm)
+
+        error = max(e1, e2, e3)
+
+        count += 1
+
+        if count == 50:
+            raise 
+
 
 def calc_plastic_reactions(bolts, mp):
     """Calculate the resisting bolt force."""
@@ -365,9 +393,8 @@ def calc_plastic_reactions(bolts, mp):
         dy = bolt[6][1]
         r = bolt[9]
 
-        rult = -mp/sum_m
-        rux = -dy/d*r*rult
-        ruy = dx/d*r*rult
+        rux = -dy/d*r
+        ruy = dx/d*r
 
         sum_rux = sum_rux + rux
         sum_ruy = sum_ruy + ruy
@@ -377,7 +404,7 @@ def calc_plastic_reactions(bolts, mp):
 
     return sum_rux, sum_ruy, sum_m
 
-def calc_moment_about_ic(bolts):
+def calc_moment_about_ic(bolts, r_ult):
     """Calculate the moment about the IC of bolt force divided by Rult."""
     sum_m = 0.0
     d_max = calc_d_max(bolts)
@@ -385,7 +412,7 @@ def calc_moment_about_ic(bolts):
         d = bolt[7]
 
         delta = 0.34*d/d_max
-        r = math.pow((1 - math.exp(-10*delta)),0.55) #ri/rult
+        r = r_ult*math.pow((1 - math.exp(-10*delta)),0.55) 
         m = r*d
 
         sum_m = sum_m + m
@@ -409,25 +436,33 @@ def calc_d(bolts, x_ic, y_ic):
         bolt[6][1] = dy
         bolt[7] = d
 
-def calc_mp(force, x_ic, y_ic):
-    """Calculate the moment about the instanteous center."""
-    x = force[3][0]
-    y = force[3][1]
+def calc_r(force, x_ic, y_ic):
+    cx = force[3][0]
+    cy = force[3][1]
 
+    rx = cx - x_ic
+    ry = cy - y_ic
+
+    r = math.sqrt(pow(rx, 2) + pow(ry, 2))
+
+    force[4][0] = rx
+    force[4][1] = ry
+    force[5] = r
+
+def calc_mp(force):
+    """Calculate the moment about the instanteous center."""
     px = force[1][0]
     py = force[1][1]
 
-    x1 = x - x_ic
-    y1 = y - y_ic
+    x1 = force[4][0]
+    y1 = force[4][1]
 
     mp = py*x1 - px*y1
 
     return mp
 
-def calc_instanteous_center(bolts, fx, fy, mo):
+def calc_instanteous_center(bolts, fx, fy, mo, x0, y0):
     """Calculate the instanteous center with respect to the centroid."""
-    x0 = 0.0
-    y0 = 0.0
     j = calc_j(bolts)
 
     num_bolts = len(bolts)
@@ -440,15 +475,15 @@ def calc_instanteous_center(bolts, fx, fy, mo):
 
     return x1, y1
 
-#def calc_d_max(bolts):
-#    d_max = 0.0
-#    for bolt in bolts:
-#        d = bolt[6]
-#        if d > d_max:
-#            d_max = d
-#
-#    return d_max
-#
+def calc_d_max(bolts):
+    d_max = 0.0
+    for bolt in bolts:
+        d = bolt[7]
+        if d > d_max:
+            d_max = d
+
+    return d_max
+
 #def calc_sum_d_squared(bolts):
 #    sum_d_sqaured = 0.0
 #    for bolt in bolts:

@@ -75,5 +75,7 @@ bolt = [bolt_num,
 force = [(user_x, user_y, user_z,
          (Px, Py, Pz),
          [Mx, My, Mz],
-         [local_x, local_y, local_z]]
+         [cx, cy, cz],
+         [rx, ry],
+         r]
 
