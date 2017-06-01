@@ -111,8 +111,10 @@ def shear(bolts, force):
         bolt[4][0] = rsx
         bolt[4][1] = rsy
 
+
 def tension(bolts, force):
     pass
+
 
 def ecc_in_plane_elastic(bolts, force):
     """Calc the bolt reactions in an elastic in plane eccentric shear connection.
@@ -154,6 +156,7 @@ def ecc_in_plane_elastic(bolts, force):
         bolt[5][0] = rex
         bolt[5][1] = rey
 
+
 def calc_moments_about_centroid(force):
     """Calculate the x, y, and z moments about the centroid of the bolt group.
 
@@ -187,6 +190,7 @@ def calc_moments_about_centroid(force):
     force[2][1] = my
     force[2][2] = mz
 
+
 def calc_centroid(bolts):
     """Calculate the centroid of the bolt group.
     
@@ -214,6 +218,7 @@ def calc_centroid(bolts):
 
     return x_centroid, y_centroid
 
+
 def calc_local_bolt_coords(bolts):
     """Calculate bolt coords with the centroid of the bolt group as the origin.
     
@@ -236,6 +241,7 @@ def calc_local_bolt_coords(bolts):
         local_y = user_y - y_cent
         bolt[3][0] = local_x
         bolt[3][1] = local_y
+
 
 def calc_local_force_coords(bolts, force):
     """Calculate force coords with the centroid of the bolt group as origin.
@@ -265,6 +271,7 @@ def calc_local_force_coords(bolts, force):
     force[3][1] = local_y
     force[3][2] = local_z
 
+
 def calc_ixx(bolts):
     """Calculate the 2nd moment of area of the bolt pattern about the x-axis.
    
@@ -288,6 +295,7 @@ def calc_ixx(bolts):
         y = bolt[3][1]
         sum_ixx = sum_ixx + math.pow(y,2)
     return sum_ixx
+
 
 def calc_iyy(bolts):
     """Calculate the 2nd moment of area of the bolt pattern about the y-axis.
@@ -313,6 +321,7 @@ def calc_iyy(bolts):
         sum_iyy = sum_iyy + math.pow(x,2)
     return sum_iyy
 
+
 def calc_j(bolts):
     """Calculate the polar moment of area of bolt pattern about the z-axis.
     
@@ -333,6 +342,7 @@ def calc_j(bolts):
     iyy = calc_iyy(bolts)
     j = ixx + iyy
     return j
+
 
 def ecc_in_plane_plastic(bolts, force):
     """Calculate the maximum bolt force based on plastic bolt deformation."""
@@ -404,6 +414,7 @@ def calc_plastic_reactions(bolts, mp):
 
     return sum_rux, sum_ruy, sum_m
 
+
 def calc_moment_about_ic(bolts, r_ult):
     """Calculate the moment about the IC of bolt force divided by Rult."""
     sum_m = 0.0
@@ -436,6 +447,7 @@ def calc_d(bolts, x_ic, y_ic):
         bolt[6][1] = dy
         bolt[7] = d
 
+
 def calc_r(force, x_ic, y_ic):
     cx = force[3][0]
     cy = force[3][1]
@@ -449,6 +461,7 @@ def calc_r(force, x_ic, y_ic):
     force[4][1] = ry
     force[5] = r
 
+
 def calc_mp(force):
     """Calculate the moment about the instanteous center."""
     px = force[1][0]
@@ -460,6 +473,7 @@ def calc_mp(force):
     mp = py*x1 - px*y1
 
     return mp
+
 
 def calc_instanteous_center(bolts, fx, fy, mo, x0, y0):
     """Calculate the instanteous center with respect to the centroid."""
@@ -474,6 +488,7 @@ def calc_instanteous_center(bolts, fx, fy, mo, x0, y0):
     y1 = y0 + ay
 
     return x1, y1
+
 
 def calc_d_max(bolts):
     d_max = 0.0
