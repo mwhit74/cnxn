@@ -374,15 +374,23 @@ def ecc_in_plane_plastic(bolts, force):
         x1 = x2
         y1 = y2
 
-        pfx = sum_rux/math.sin(delta_angle)
-        pfy = sum_ruy/math.cos(delta_angle)
+        if delta_angle == 0.0:
+            pfx = 0.0
+        else:
+            pfx = sum_rux/math.sin(delta_angle)
+
+        if delta_angle == 1.0:
+            pfy = 0.0
+        else:
+            pfy = sum_ruy/math.cos(delta_angle)
+
         pm = sum_m/r
 
-        e1 = abs(pfx - pfy)
-        e2 = abs(pfx - pm)
-        e3 = abs(pfy - pm)
+        diff_xy = abs(pfx - pfy)
+        diff_ym = abs(pfy - pm)
+        diff_mx = abs(pm - pfx)
 
-        error = max(e1, e2, e3)
+        error = max(fx, fy, diff_xy, diff_ym, diff_mx)
 
         count += 1
 
@@ -403,19 +411,17 @@ def calc_plastic_reactions(bolts, mp):
         dy = bolt[6][1]
         r = bolt[9]
 
-        rux = -dy/d*r
-        ruy = dx/d*r
+        rult = mp/sum_m
+        rux = -dy/d*r*rult
+        ruy = dx/d*r*rult
 
         sum_rux = sum_rux + rux
         sum_ruy = sum_ruy + ruy
         
-        bolt[10][0] = rux #updating reaction based on new ic location
-        bolt[10][1] = ruy #updating reaction based on new ic location
-
     return sum_rux, sum_ruy, sum_m
 
 
-def calc_moment_about_ic(bolts, r_ult):
+def calc_moment_about_ic(bolts):
     """Calculate the moment about the IC of bolt force divided by Rult."""
     sum_m = 0.0
     d_max = calc_d_max(bolts)
@@ -423,7 +429,7 @@ def calc_moment_about_ic(bolts, r_ult):
         d = bolt[7]
 
         delta = 0.34*d/d_max
-        r = r_ult*math.pow((1 - math.exp(-10*delta)),0.55) 
+        r = math.pow((1 - math.exp(-10*delta)),0.55) #ri/rult
         m = r*d
 
         sum_m = sum_m + m

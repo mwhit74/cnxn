@@ -176,8 +176,7 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         deltas = [0.340, 0.1521, 0.340] 
         rs = [0.9815, 0.8731, 0.9815]
 
-        r_ult = 1.0
-        sum_m = demand.calc_moment_about_ic(self.bolts1, r_ult)
+        sum_m = demand.calc_moment_about_ic(self.bolts1)
 
         self.assertAlmostEqual(c_sum_m, sum_m, places=3)
         
@@ -204,8 +203,7 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         deltas = [0.234, 0.163, 0.284, 0.299, 0.248, 0.340] 
         rs = [0.9458, 0.8870, 0.9674, 0.9720, 0.9530, 0.9815]
 
-        r_ult = 1.0
-        sum_m = demand.calc_moment_about_ic(self.bolts2, r_ult)
+        sum_m = demand.calc_moment_about_ic(self.bolts2)
 
         self.assertAlmostEqual(c_sum_m, sum_m, places=3)
         
