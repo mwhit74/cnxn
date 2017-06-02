@@ -45,8 +45,8 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         del self.force2
 
     def test_calc_instanteous_center_1(self):
-        demand.calc_local_bolt_coords(self.bolts1)
-        demand.calc_local_force_coords(self.bolts1, self.force1)
+        demand.calc_bolt_coords_wrt_centroid(self.bolts1)
+        demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
         demand.calc_moments_about_centroid(self.force1)
 
         cx_ic = -1.5
@@ -65,8 +65,8 @@ class TestDemandPlasticInPlane(unittest.TestCase):
 
 
     def test_calc_instanteous_center_2(self):
-        demand.calc_local_bolt_coords(self.bolts2)
-        demand.calc_local_force_coords(self.bolts2, self.force2)
+        demand.calc_bolt_coords_wrt_centroid(self.bolts2)
+        demand.calc_force_coords_wrt_centroid(self.bolts2, self.force2)
         demand.calc_moments_about_centroid(self.force2)
 
         cx_ic = -0.632 
@@ -84,8 +84,8 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         self.assertAlmostEqual(cy_ic, y_ic, places=3)
 
     def test_calc_d_1(self):
-        demand.calc_local_bolt_coords(self.bolts1)
-        demand.calc_local_force_coords(self.bolts1, self.force1)
+        demand.calc_bolt_coords_wrt_centroid(self.bolts1)
+        demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
         demand.calc_moments_about_centroid(self.force1)
         fx = self.force1[1][0]
         fy = self.force1[1][1]
@@ -103,8 +103,8 @@ class TestDemandPlasticInPlane(unittest.TestCase):
             self.assertAlmostEqual(bolt[7], d, places=3)
 
     def test_calc_d_2(self):
-        demand.calc_local_bolt_coords(self.bolts2)
-        demand.calc_local_force_coords(self.bolts2, self.force2)
+        demand.calc_bolt_coords_wrt_centroid(self.bolts2)
+        demand.calc_force_coords_wrt_centroid(self.bolts2, self.force2)
         demand.calc_moments_about_centroid(self.force2)
         fx = self.force2[1][0]
         fy = self.force2[1][1]
@@ -122,8 +122,8 @@ class TestDemandPlasticInPlane(unittest.TestCase):
             self.assertAlmostEqual(bolt[7], d, places=3)
 
     def test_calc_mp_1(self):
-        demand.calc_local_bolt_coords(self.bolts1)
-        demand.calc_local_force_coords(self.bolts1, self.force1)
+        demand.calc_bolt_coords_wrt_centroid(self.bolts1)
+        demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
         demand.calc_moments_about_centroid(self.force1)
         fx = self.force1[1][0]
         fy = self.force1[1][1]
@@ -141,8 +141,8 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         self.assertAlmostEqual(mp, c_mp, places=3)
 
     def test_calc_mp_2(self):
-        demand.calc_local_bolt_coords(self.bolts2)
-        demand.calc_local_force_coords(self.bolts2, self.force2)
+        demand.calc_bolt_coords_wrt_centroid(self.bolts2)
+        demand.calc_force_coords_wrt_centroid(self.bolts2, self.force2)
         demand.calc_moments_about_centroid(self.force2)
         fx = self.force2[1][0]
         fy = self.force2[1][1]
@@ -160,8 +160,8 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         self.assertAlmostEqual(mp, c_mp, places=3)
 
     def test_calc_moment_about_ic_1(self):
-        demand.calc_local_bolt_coords(self.bolts1)
-        demand.calc_local_force_coords(self.bolts1, self.force1)
+        demand.calc_bolt_coords_wrt_centroid(self.bolts1)
+        demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
         demand.calc_moments_about_centroid(self.force1)
         fx = self.force1[1][0]
         fy = self.force1[1][1]
@@ -187,8 +187,8 @@ class TestDemandPlasticInPlane(unittest.TestCase):
             self.assertAlmostEqual(c_r, r, places=3)
 
     def test_calc_moment_about_ic_2(self):
-        demand.calc_local_bolt_coords(self.bolts2)
-        demand.calc_local_force_coords(self.bolts2, self.force2)
+        demand.calc_bolt_coords_wrt_centroid(self.bolts2)
+        demand.calc_force_coords_wrt_centroid(self.bolts2, self.force2)
         demand.calc_moments_about_centroid(self.force2)
         fx = self.force2[1][0]
         fy = self.force2[1][1]
