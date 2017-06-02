@@ -17,25 +17,25 @@ design.
 
 user input
 bolt
-    - bolt num
-    - x-coord
-    - y-coord
-    - diameter
+- bolt num
+- x-coord
+- y-coord
+- diameter
 force
-    - x-coord
-    - y-coord
-    - z-coord
-    - px
-    - py
-    - pz
+- x-coord
+- y-coord
+- z-coord
+- px
+- py
+- pz
 analysis type
-    - shear
-    - tension?
-    - ecc_in_plane_elastic
-    - ecc_in_plane_plastic
-    - ecc_out_plane_find_na
-    - ecc_out_plane_na
-    - ecc_out_plane_init_ten
+- shear
+- tension?
+- ecc_in_plane_elastic
+- ecc_in_plane_plastic
+- ecc_out_plane_find_na
+- ecc_out_plane_na
+- ecc_out_plane_init_ten
 
 assumptions
 1. it is up to the user to determine the x and y coordinates of their origin and
