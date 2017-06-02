@@ -21,6 +21,7 @@ bolt
 - x-coord
 - y-coord
 - diameter
+
 force
 - x-coord
 - y-coord
@@ -28,6 +29,7 @@ force
 - px
 - py
 - pz
+
 analysis type
 - shear
 - tension?
@@ -37,7 +39,7 @@ analysis type
 - ecc_out_plane_na
 - ecc_out_plane_init_ten
 
-assumptions
+**Assumptions**
 1. it is up to the user to determine the x and y coordinates of their origin and
 stick to it
 2. the x and y axes are parallel to the faying surface. x is positive to the
