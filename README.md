@@ -16,6 +16,7 @@ design.
 
 
 user input
+
 bolt
 - bolt num
 - x-coord
