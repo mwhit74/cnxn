@@ -224,3 +224,73 @@ class TestDemandPlasticInPlane(unittest.TestCase):
             self.assertAlmostEqual(c_delta, delta, places=3)
             self.assertAlmostEqual(c_r, r, places=3)
 
+    def test_calc_r_1(self):
+        demand.calc_bolt_coords_wrt_centroid(self.bolts1)
+        demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
+        demand.calc_moments_about_centroid(self.force1)
+        px = self.force1[1][0]
+        py = self.force1[1][1]
+        mo = self.force1[2][2]
+        x0 = 0.0
+        y0 = 0.0
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, px, py, mo, x0,
+                                                    y0)
+        try:
+            delta_angle = math.atan(px/py)
+        except ZeroDivisionError, e:
+            delta_angle = math.pi/2
+
+        c_df_x = 
+        c_df_y =
+        c_r =
+
+        self.assertAlmostEqual(c_delta_angle, delta_angle, places=3)
+    
+    def test_calc_r_2(self):
+        demand.calc_bolt_coords_wrt_centroid(self.bolts2)
+        demand.calc_force_coords_wrt_centroid(self.bolts2, self.force2)
+        demand.calc_moments_about_centroid(self.force2)
+        px = self.force2[1][0]
+        py = self.force2[1][1]
+        mo = self.force2[2][2]
+        x0 = 0.0
+        y0 = 0.0
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts2, px, py, mo, x0,
+                                                    y0)
+        try:
+            delta_angle = math.atan(px/py)
+        except ZeroDivisionError, e:
+            delta_angle = math.pi/2
+
+        demand.calc_r(self.force2, x_ic, y_ic, delta_angle)
+    def test_calc_plastic_reactions(self):
+        demand.calc_bolt_coords_wrt_centroid(self.bolts1)
+        demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
+        demand.calc_moments_about_centroid(self.force1)
+        px = self.force1[1][0]
+        py = self.force1[1][1]
+        mo = self.force1[2][2]
+        x0 = 0.0
+        y0 = 0.0
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, px, py, mo, x0,
+                                                    y0)
+        try:
+            delta_angle = math.atan(px/py)
+        except ZeroDivisionError, e:
+            delta_angle = math.pi/2
+
+        demand.calc_r(self.force1, x_ic, y_ic, delta_angle)
+
+        mp = demand.calc_mp(self.force1)
+
+        demand.calc_d(self.bolts1, x_ic, y_ic)
+
+        c_sum_rux =
+        c_sum_ruy = 
+        c_sum_m = 
+
+        sum_rux, sum_ruy, sum_m = demand.calc_plastic_reactions(self.bolts1, mp)
+
+        self.assertAlmostEqual(c_sum_rux, sum_rux, places=3)
+        self.assertAlmostEqual(c_sum_ruy, sum_ruy, places=3)
+        self.assertAlmostEqual(c_sum_m, sum_m, places=3)
