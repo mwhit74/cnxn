@@ -219,7 +219,7 @@ def calc_centroid(bolts):
     return x_centroid, y_centroid
 
 
-def calc_local_bolt_coords(bolts):
+def calc_bolt_coords_wrt_centroid(bolts):
     """Calculate bolt coords with the centroid of the bolt group as the origin.
     
     Args:
@@ -243,7 +243,7 @@ def calc_local_bolt_coords(bolts):
         bolt[3][1] = local_y
 
 
-def calc_local_force_coords(bolts, force):
+def calc_force_coords_wrt_centroid(bolts, force):
     """Calculate force coords with the centroid of the bolt group as origin.
     
     Args:
@@ -286,7 +286,7 @@ def calc_ixx(bolts):
     Raises:
 
     Notes:
-        Must call calc_local_force_coords to populate the y-coordinate with
+        Must call calc_force_coords_wrt_centroid to populate the y-coordinate with
         respect to the centroid in the bolt data structure before calling this
         function.
     """
@@ -311,7 +311,7 @@ def calc_iyy(bolts):
     Raises:
 
     Notes:
-        Must call calc_local_force_coords to populate the x-coordinate with
+        Must call calc_force_coords_wrt_centroid to populate the x-coordinate with
         respect to the centroid in the bolt data structure before calling this
         function.
     """
@@ -334,7 +334,7 @@ def calc_j(bolts):
     Raises:
 
     Notes:
-        Must call calc_local_force_coords to populate the x and y coordinate
+        Must call calc_force_coords_wrt_centroid to populate the x and y coordinate
         with respect to the centroid in the bolt data structure before calling
         this function.
     """
@@ -351,7 +351,7 @@ def ecc_in_plane_plastic(bolts, force):
     mo = force[2][2]
     x0 = 0.0 #coordinate system centered on centroid
     y0 = 0.0 #coordinate system centered on centroid
-    x1, y1 = calc_instanteous_center(bolts, px, py, mo, x0, y0)
+    x1, y1 = calc_instanteous_center(bolts, px, py, mo, x0, y0) #elastic IC
     mp = calc_mp(bolts, force, x1, y1)
     calc_d(bolts, x_ic, y_ic)
     delta_angle = math.tan(px/py)
