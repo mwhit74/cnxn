@@ -1,6 +1,7 @@
 import demand
 import unittest
 import pdb
+import math
 
 class TestDemandPlasticInPlane(unittest.TestCase):
 
@@ -15,7 +16,7 @@ class TestDemandPlasticInPlane(unittest.TestCase):
                        [None, None], [None, None], None, None, None,
                        [None, None]]]
         self.force1 = [(4.0, 0.0, 0.0), (0.0, -1.0, 0.0), [None, None, None],
-                        [None, None, None], [None, None], None]
+                        [None, None, None], None, [None, None], None]
 
         self.bolts2 = [[1,(0.0, 0.0), 1.0, [None, None], [None, None], 
                        [None, None], [None, None], None, None, None,
@@ -36,7 +37,7 @@ class TestDemandPlasticInPlane(unittest.TestCase):
                        [None, None], [None, None], None, None, None,
                        [None, None]]]
         self.force2 = [(23.0, 8.0, 0.0), (0.6, -0.8, 0.0), [None, None, None],
-                        [None, None, None], [None, None], None]
+                        [None, None, None], None, [None, None], None]
 
     def tearDown(self):
         del self.bolts1
@@ -52,12 +53,12 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         cx_ic = -1.5
         cy_ic = 0.0
 
-        fx = self.force1[1][0]
-        fy = self.force1[1][1]
+        px = self.force1[1][0]
+        py = self.force1[1][1]
         mo = self.force1[2][2]
         x0 = 0.0
         y0 = 0.0
-        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, fx, fy, mo, x0,
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, px, py, mo, x0,
                                                     y0)
 
         self.assertAlmostEqual(cx_ic, x_ic, places=3)
@@ -72,12 +73,12 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         cx_ic = -0.632 
         cy_ic = -0.474 
 
-        fx = self.force2[1][0]
-        fy = self.force2[1][1]
+        px = self.force2[1][0]
+        py = self.force2[1][1]
         mo = self.force2[2][2]
         x0 = 0.0
         y0 = 0.0
-        x_ic, y_ic = demand.calc_instanteous_center(self.bolts2, fx, fy, mo, x0,
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts2, px, py, mo, x0,
                                                     y0)
 
         self.assertAlmostEqual(cx_ic, x_ic, places=3)
@@ -87,12 +88,12 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         demand.calc_bolt_coords_wrt_centroid(self.bolts1)
         demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
         demand.calc_moments_about_centroid(self.force1)
-        fx = self.force1[1][0]
-        fy = self.force1[1][1]
+        px = self.force1[1][0]
+        py = self.force1[1][1]
         mo = self.force1[2][2]
         x0 = 0.0
         y0 = 0.0
-        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, fx, fy, mo, x0,
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, px, py, mo, x0,
                                                     y0)
 
         demand.calc_d(self.bolts1, x_ic, y_ic)
@@ -106,12 +107,12 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         demand.calc_bolt_coords_wrt_centroid(self.bolts2)
         demand.calc_force_coords_wrt_centroid(self.bolts2, self.force2)
         demand.calc_moments_about_centroid(self.force2)
-        fx = self.force2[1][0]
-        fy = self.force2[1][1]
+        px = self.force2[1][0]
+        py = self.force2[1][1]
         mo = self.force2[2][2]
         x0 = 0.0
         y0 = 0.0
-        x_ic, y_ic = demand.calc_instanteous_center(self.bolts2, fx, fy, mo, x0,
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts2, px, py, mo, x0,
                                                     y0)
 
         demand.calc_d(self.bolts2, x_ic, y_ic)
@@ -125,14 +126,19 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         demand.calc_bolt_coords_wrt_centroid(self.bolts1)
         demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
         demand.calc_moments_about_centroid(self.force1)
-        fx = self.force1[1][0]
-        fy = self.force1[1][1]
+        px = self.force1[1][0]
+        py = self.force1[1][1]
         mo = self.force1[2][2]
         x0 = 0.0
         y0 = 0.0
-        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, fx, fy, mo, x0,
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, px, py, mo, x0,
                                                     y0)
-        demand.calc_r(self.force1, x_ic, y_ic)
+        try:
+            delta_angle = math.atan(px/py)
+        except ZeroDivisionError, e:
+            delta_angle = math.pi/2
+
+        demand.calc_r(self.force1, x_ic, y_ic, delta_angle)
 
         mp = demand.calc_mp(self.force1)
 
@@ -144,14 +150,19 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         demand.calc_bolt_coords_wrt_centroid(self.bolts2)
         demand.calc_force_coords_wrt_centroid(self.bolts2, self.force2)
         demand.calc_moments_about_centroid(self.force2)
-        fx = self.force2[1][0]
-        fy = self.force2[1][1]
+        px = self.force2[1][0]
+        py = self.force2[1][1]
         mo = self.force2[2][2]
         x0 = 0.0
         y0 = 0.0
-        x_ic, y_ic = demand.calc_instanteous_center(self.bolts2, fx, fy, mo, x0,
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts2, px, py, mo, x0,
                                                     y0)
-        demand.calc_r(self.force2, x_ic, y_ic)
+        try:
+            delta_angle = math.atan(px/py)
+        except ZeroDivisionError, e:
+            delta_angle = math.pi/2
+
+        demand.calc_r(self.force2, x_ic, y_ic, delta_angle)
 
         mp = demand.calc_mp(self.force2)
 
@@ -163,12 +174,12 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         demand.calc_bolt_coords_wrt_centroid(self.bolts1)
         demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
         demand.calc_moments_about_centroid(self.force1)
-        fx = self.force1[1][0]
-        fy = self.force1[1][1]
+        px = self.force1[1][0]
+        py = self.force1[1][1]
         mo = self.force1[2][2]
         x0 = 0.0
         y0 = 0.0
-        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, fx, fy, mo, x0,
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, px, py, mo, x0,
                                                     y0)
         demand.calc_d(self.bolts1, x_ic, y_ic)
 
@@ -190,12 +201,12 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         demand.calc_bolt_coords_wrt_centroid(self.bolts2)
         demand.calc_force_coords_wrt_centroid(self.bolts2, self.force2)
         demand.calc_moments_about_centroid(self.force2)
-        fx = self.force2[1][0]
-        fy = self.force2[1][1]
+        px = self.force2[1][0]
+        py = self.force2[1][1]
         mo = self.force2[2][2]
         x0 = 0.0
         y0 = 0.0
-        x_ic, y_ic = demand.calc_instanteous_center(self.bolts2, fx, fy, mo, x0,
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts2, px, py, mo, x0,
                                                     y0)
         demand.calc_d(self.bolts2, x_ic, y_ic)
 

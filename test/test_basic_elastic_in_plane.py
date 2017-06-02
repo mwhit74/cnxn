@@ -23,7 +23,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
                                    [None, None]])
 
         self.force = [(20.0, 25.0, 5.0),(7.54, 2.34, 4.37),[None, None, None],
-                [None, None, None]]
+                     [None, None, None], None, [None, None], None]
 
     def tearDown(self):
         del self.force
@@ -46,7 +46,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 #QUADRANT 1 
     def test_ecc_in_plane_elastic_q1_fpx(self):
         force_px = [(7.0, 6.5, 5.0),(7.54, 0.0, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_px)
@@ -84,7 +84,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q1_fnx(self):
         force_nx = [(7.0, 6.5, 5.0),(-7.54, 0.0, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_nx)
@@ -123,7 +123,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q1_fpy(self):
         force_py = [(7.0, 6.5, 5.0),(0.0, 2.34, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_py)
@@ -162,7 +162,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q1_fny(self):
         force_ny = [(7.0, 6.5, 5.0),(0.0, -2.34, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_ny)
@@ -202,7 +202,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 #QUADRANT 2
     def test_ecc_in_plane_elastic_q2_fpx(self):
         force_px = [(2.0, 6.5, 5.0),(7.54, 0.0, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_px)
@@ -241,7 +241,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q2_fnx(self):
         force_nx = [(2.0, 6.5, 5.0),(-7.54, 0.0, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_nx)
@@ -280,7 +280,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q2_fpy(self):
         force_py = [(2.0, 6.5, 5.0),(0.0, 2.34, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_py)
@@ -319,7 +319,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q2_fny(self):
         force_ny = [(2.0, 6.5, 5.0),(0.0, -2.34, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_ny)
@@ -359,7 +359,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 #QUADRANT 3
     def test_ecc_in_plane_elastic_q3_fpx(self):
         force_px = [(2.0, 2.5, 5.0),(7.54, 0.0, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_px)
@@ -398,7 +398,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q3_fnx(self):
         force_nx = [(2.0, 2.5, 5.0),(-7.54, 0.0, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_nx)
@@ -437,7 +437,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q3_fpy(self):
         force_py = [(2.0, 2.5, 5.0),(0.0, 2.34, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_py)
@@ -476,7 +476,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q3_fny(self):
         force_ny = [(2.0, 2.5, 5.0),(0.0, -2.34, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_ny)
@@ -516,7 +516,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 #QUADRANT 4
     def test_ecc_in_plane_elastic_q4_fpx(self):
         force_px = [(7.0, 2.5, 5.0),(7.54, 0.0, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_px)
@@ -555,7 +555,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q4_fnx(self):
         force_nx = [(7.0, 2.5, 5.0),(-7.54, 0.0, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_nx)
@@ -594,7 +594,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q4_fpy(self):
         force_py = [(7.0, 2.5, 5.0),(0.0, 2.34, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_py)
@@ -633,7 +633,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
 
     def test_ecc_in_plane_elastic_q4_fny(self):
         force_ny = [(7.0, 2.5, 5.0),(0.0, -2.34, 0.0),[None, None, None],
-                            [None, None, None]]
+                            [None, None, None], None, [None, None], None]
         demand.calc_bolt_coords_wrt_centroid(self.bolts)
         j = demand.calc_j(self.bolts)
         demand.calc_force_coords_wrt_centroid(self.bolts,force_ny)

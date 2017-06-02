@@ -274,7 +274,10 @@ def calc_force_coords_wrt_centroid(bolts, force):
     px = force[1][0]
     py = force[1][1]
 
-    delta_angle = math.atan(px/py)
+    try:
+        delta_angle = math.atan(px/py)
+    except:
+        delta_angle = math.pi/2
 
     ec = cx*math.sin(delta_angle) + cy*math.cos(delta_angle)
 
@@ -363,7 +366,10 @@ def ecc_in_plane_plastic(bolts, force):
     x1, y1 = calc_instanteous_center(bolts, px, py, mo, x0, y0) #elastic IC
     mp = calc_mp(bolts, force, x1, y1)
     calc_d(bolts, x_ic, y_ic)
-    delta_angle = math.tan(px/py)
+    try:
+        delta_angle = math.atan(px/py)
+    except ZeroDivisionError, e:
+        delta_angle = math.pi/2
 
     error = 1.0
     count = 0
@@ -378,7 +384,7 @@ def ecc_in_plane_plastic(bolts, force):
         x2, y2 = calc_instanteous_center(bolts, fx, fy, mo, x1, y1)
         calc_r(force, x2, y2, delta_angle)
         mp = calc_mp(force)
-        r = force[5]
+        r = force[6]
 
         x1 = x2
         y1 = y2
@@ -388,16 +394,16 @@ def ecc_in_plane_plastic(bolts, force):
         else:
             pfx = sum_rux/math.sin(delta_angle)
 
-        if delta_angle == 1.0:
+        if delta_angle == math.pi/2:
             pfy = 0.0
         else:
             pfy = sum_ruy/math.cos(delta_angle)
 
         pm = sum_m/r
 
-        diff_xy = abs(pfx - pfy)
-        diff_ym = abs(pfy - pm)
-        diff_mx = abs(pm - pfx)
+        #diff_xy = abs(pfx - pfy)
+        #diff_ym = abs(pfy - pm)
+        #diff_mx = abs(pm - pfx)
 
         error = max(fx, fy, diff_xy, diff_ym, diff_mx)
 
@@ -471,7 +477,7 @@ def calc_r(force, x_ic, y_ic, delta_angle):
     dx_f = cx - x_ic
     dy_f = cy - y_ic
 
-    r = ec + dx*math.cos(delta_angle) + dy*math.cos(delta_angle)
+    r = ec + dx_f*math.cos(delta_angle) + dy_f*math.cos(delta_angle)
 
     force[5][0] = dx_f
     force[5][1] = dy_f
@@ -486,7 +492,7 @@ def calc_mp(force):
     dx_f = force[5][0]
     dy_f = force[5][1]
 
-    mp = py*dx_f - px*dx_y
+    mp = py*dx_f - px*dy_f
 
     return mp
 
