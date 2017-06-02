@@ -263,13 +263,22 @@ def calc_force_coords_wrt_centroid(bolts, force):
     user_y = force[0][1]
     user_z = force[0][2]
 
-    local_x = user_x - x_cent
-    local_y = user_y - y_cent
-    local_z = user_z
+    cx = user_x - x_cent
+    cy = user_y - y_cent
+    cz = user_z
 
-    force[3][0] = local_x
-    force[3][1] = local_y
-    force[3][2] = local_z
+    force[3][0] = cx
+    force[3][1] = cy
+    force[3][2] = cz
+
+    px = force[1][0]
+    py = force[1][1]
+
+    delta_angle = math.atan(px/py)
+
+    ec = cx*math.sin(delta_angle) + cy*math.cos(delta_angle)
+
+    force[4] = ec
 
 
 def calc_ixx(bolts):
@@ -367,7 +376,7 @@ def ecc_in_plane_plastic(bolts, force):
         fy = py + sum_ruy
 
         x2, y2 = calc_instanteous_center(bolts, fx, fy, mo, x1, y1)
-        calc_r(force, x2, y2)
+        calc_r(force, x2, y2, delta_angle)
         mp = calc_mp(force)
         r = force[5]
 
@@ -454,18 +463,19 @@ def calc_d(bolts, x_ic, y_ic):
         bolt[7] = d
 
 
-def calc_r(force, x_ic, y_ic):
+def calc_r(force, x_ic, y_ic, delta_angle):
     cx = force[3][0]
     cy = force[3][1]
+    ec = force[4]
 
-    rx = cx - x_ic
-    ry = cy - y_ic
+    dx_f = cx - x_ic
+    dy_f = cy - y_ic
 
-    r = math.sqrt(pow(rx, 2) + pow(ry, 2))
+    r = ec + dx*math.cos(delta_angle) + dy*math.cos(delta_angle)
 
-    force[4][0] = rx
-    force[4][1] = ry
-    force[5] = r
+    force[5][0] = dx_f
+    force[5][1] = dy_f
+    force[6] = r
 
 
 def calc_mp(force):
@@ -473,10 +483,10 @@ def calc_mp(force):
     px = force[1][0]
     py = force[1][1]
 
-    x1 = force[4][0]
-    y1 = force[4][1]
+    dx_f = force[5][0]
+    dy_f = force[5][1]
 
-    mp = py*x1 - px*y1
+    mp = py*dx_f - px*dx_y
 
     return mp
 

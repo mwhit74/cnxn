@@ -76,6 +76,7 @@ force = [(user_x, user_y, user_z,
          (Px, Py, Pz),
          [Mx, My, Mz],
          [cx, cy, cz],
-         [rx, ry],
+         e,
+         [dx_f, dy_f],
          r]
 
