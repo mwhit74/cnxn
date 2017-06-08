@@ -732,7 +732,7 @@ class TestDemandElasticInPlane(unittest.TestCase):
         cx = 20.0 - 4.50
         cy = 25.0 - 4.50
         cz = 5.0
-        cec = 
+        cec = 24.173
 
         demand.calc_force_coords_wrt_centroid(self.bolts, self.force)
 
@@ -741,10 +741,10 @@ class TestDemandElasticInPlane(unittest.TestCase):
         z = self.force[3][2]
         ec = self.force[4]
 
-        self.assertEqual(cx, x)
-        self.assertEqual(cy, y)
-        self.assertEqual(cz, z)
-        self.assertEqual(cec, ec)
+        self.assertAlmostEqual(cx, x, places=3)
+        self.assertAlmostEqual(cy, y, places=3)
+        self.assertAlmostEqual(cz, z, places=3)
+        self.assertAlmostEqual(cec, ec, places=3)
 
     def test_calc_ixx(self):
         cixx = 825.0

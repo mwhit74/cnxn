@@ -274,15 +274,20 @@ def calc_force_coords_wrt_centroid(bolts, force):
     px = force[1][0]
     py = force[1][1]
 
-    try:
-        delta_angle = math.atan(px/py)
-    except:
-        delta_angle = math.pi/2
+    delta_angle = calc_delta_angle(px, py)
 
-    ec = cx*math.sin(delta_angle) + cy*math.cos(delta_angle)
+    ec = cx*math.cos(delta_angle) + cy*math.sin(delta_angle)
 
     force[4] = ec
 
+def calc_delta_angle(px, py):
+
+    try:
+        delta_angle = -1*math.atan(px/py)
+    except:
+        delta_angle = math.pi/2
+
+    return delta_angle
 
 def calc_ixx(bolts):
     """Calculate the 2nd moment of area of the bolt pattern about the x-axis.
@@ -357,7 +362,7 @@ def calc_j(bolts):
 
 
 def ecc_in_plane_plastic(bolts, force):
-    """Calculate the maximum bolt force based on plastic bolt deformation."""
+    """Iterate to the location of the instantaneous center."""
     px = force[1][0]
     py = force[1][1]
     mo = force[2][2]
@@ -366,17 +371,14 @@ def ecc_in_plane_plastic(bolts, force):
     x1, y1 = calc_instanteous_center(bolts, px, py, mo, x0, y0) #elastic IC
     mp = calc_mp(bolts, force, x1, y1)
     calc_d(bolts, x_ic, y_ic)
-    try:
-        delta_angle = math.atan(px/py)
-    except ZeroDivisionError, e:
-        delta_angle = math.pi/2
+    delta_angle = calc_delta_angle(px, py)
 
     error = 1.0
     count = 0
     
     while error > 0.01:
 
-        sum_rux, sum_ruy, sum_m = calc_plastic_reactions(bolts, mp)
+        sum_rux, sum_ruy, sum_m = calc_bolt_fraction_reactions(bolts, mp)
     
         fx = px + sum_rux
         fy = py + sum_ruy
@@ -384,36 +386,43 @@ def ecc_in_plane_plastic(bolts, force):
         x2, y2 = calc_instanteous_center(bolts, fx, fy, mo, x1, y1)
         calc_r(force, x2, y2, delta_angle)
         mp = calc_mp(force)
-        r = force[6]
 
         x1 = x2
         y1 = y2
 
-        if delta_angle == 0.0:
-            pfx = 0.0
-        else:
-            pfx = sum_rux/math.sin(delta_angle)
+        #r = force[6]
+        #if delta_angle == 0.0:
+        #    pfx = 0.0
+        #else:
+        #    pfx = sum_rux/math.sin(delta_angle)
 
-        if delta_angle == math.pi/2:
-            pfy = 0.0
-        else:
-            pfy = sum_ruy/math.cos(delta_angle)
+        #if delta_angle == math.pi/2:
+        #    pfy = 0.0
+        #else:
+        #    pfy = sum_ruy/math.cos(delta_angle)
 
-        pm = sum_m/r
+        #pm = sum_m/r
 
         #diff_xy = abs(pfx - pfy)
         #diff_ym = abs(pfy - pm)
         #diff_mx = abs(pm - pfx)
 
-        error = max(fx, fy, diff_xy, diff_ym, diff_mx)
+        error = max(fx, fy)
 
         count += 1
 
         if count == 50:
             raise 
 
+    return fx, fy, x2, y2, mp
 
-def calc_plastic_reactions(bolts, mp):
+def calc_bolt_reactions(bolts, rult):
+    pass
+    
+
+    pass
+
+def calc_bolt_fraction_reactions(bolts, mp):
     """Calculate the resisting bolt force."""
     sum_m = calc_moment_about_ic(bolts)
 
@@ -426,8 +435,8 @@ def calc_plastic_reactions(bolts, mp):
         dy = bolt[6][1]
         r = bolt[9]
 
-        rult = mp/sum_m
-        rux = -dy/d*r*rult
+        rult = -1*mp/sum_m
+        rux = -1*dy/d*r*rult
         ruy = dx/d*r*rult
 
         sum_rux = sum_rux + rux
@@ -470,6 +479,7 @@ def calc_d(bolts, x_ic, y_ic):
 
 
 def calc_r(force, x_ic, y_ic, delta_angle):
+    """Calculate the location of the load application point wrt the IC."""
     cx = force[3][0]
     cy = force[3][1]
     ec = force[4]
@@ -477,7 +487,7 @@ def calc_r(force, x_ic, y_ic, delta_angle):
     dx_f = cx - x_ic
     dy_f = cy - y_ic
 
-    r = ec + dx_f*math.cos(delta_angle) + dy_f*math.cos(delta_angle)
+    r = ec - x_ic*math.cos(delta_angle) - y_ic*math.sin(delta_angle)
 
     force[5][0] = dx_f
     force[5][1] = dy_f
