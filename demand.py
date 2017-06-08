@@ -369,14 +369,17 @@ def ecc_in_plane_plastic(bolts, force):
     x0 = 0.0 #coordinate system centered on centroid
     y0 = 0.0 #coordinate system centered on centroid
     x1, y1 = calc_instanteous_center(bolts, px, py, mo, x0, y0) #elastic IC
-    mp = calc_mp(bolts, force, x1, y1)
-    calc_d(bolts, x_ic, y_ic)
+    mp = calc_mp(force)
+    calc_d(bolts, x1, y1)
     delta_angle = calc_delta_angle(px, py)
 
     error = 1.0
     count = 0
-    
+
     while error > 0.01:
+        cur_x = x1
+        cur_y = y1
+        cur_mp = mp
 
         sum_rux, sum_ruy, sum_m = calc_bolt_fraction_reactions(bolts, mp)
     
@@ -384,12 +387,14 @@ def ecc_in_plane_plastic(bolts, force):
         fy = py + sum_ruy
 
         x2, y2 = calc_instanteous_center(bolts, fx, fy, mo, x1, y1)
+        calc_d(bolts, x2, y2)
         calc_r(force, x2, y2, delta_angle)
         mp = calc_mp(force)
 
         x1 = x2
         y1 = y2
 
+        #a seperate but unncessary convergence test
         #r = force[6]
         #if delta_angle == 0.0:
         #    pfx = 0.0
@@ -407,20 +412,19 @@ def ecc_in_plane_plastic(bolts, force):
         #diff_ym = abs(pfy - pm)
         #diff_mx = abs(pm - pfx)
 
-        error = max(fx, fy)
+        error = max(abs(fx), abs(fy))
 
         count += 1
 
         if count == 50:
             raise 
 
-    return fx, fy, x2, y2, mp
+    return fx, fy, cur_x, cur_y, cur_mp
+
 
 def calc_bolt_reactions(bolts, rult):
     pass
-    
 
-    pass
 
 def calc_bolt_fraction_reactions(bolts, mp):
     """Calculate the resisting bolt force."""
@@ -441,6 +445,7 @@ def calc_bolt_fraction_reactions(bolts, mp):
 
         sum_rux = sum_rux + rux
         sum_ruy = sum_ruy + ruy
+
         
     return sum_rux, sum_ruy, sum_m
 
