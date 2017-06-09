@@ -77,9 +77,14 @@ Notes:
     bolt pattern to keep track of the properties of the bolt pattern but at this
     time it does not seem necessary.
 
+TODO:
     There is also consideration to use an object oriented approach for the
     bolts, forces, and bolt pattern. This would require a major refactoring of
     the code and will not happen immediately. 
+
+    The delta angle at a minimum should be part of the force data structure and
+    if oop is implemented in the future should be part of the force class. It is
+    currently to much of a hassle to implement. 
 """
 import math
 
@@ -280,7 +285,7 @@ def calc_force_coords_wrt_centroid(bolts, force):
 
     delta_angle = calc_delta_angle(px, py)
 
-    ec = cx*math.cos(delta_angle) + cy*math.sin(delta_angle)
+    ec = abs(cx*math.cos(delta_angle) + cy*math.sin(delta_angle))
 
     force[4] = ec
 
@@ -524,12 +529,12 @@ def calc_r(force, x_ic, y_ic, delta_angle):
     """Calculate the location of the load application point wrt the IC."""
     cx = force[3][0]
     cy = force[3][1]
-    ec = force[4]
 
     dx_f = cx - x_ic
     dy_f = cy - y_ic
 
-    r = ec - x_ic*math.cos(delta_angle) - y_ic*math.sin(delta_angle)
+    r = abs(cx*math.cos(delta_angle) + cy*math.sin(delta_angle) - 
+            x_ic*math.cos(delta_angle) - y_ic*math.sin(delta_angle))
 
     force[5][0] = dx_f
     force[5][1] = dy_f
