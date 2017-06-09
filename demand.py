@@ -75,7 +75,11 @@ Notes:
 
     There has been consideration to create a third data structure called
     bolt pattern to keep track of the properties of the bolt pattern but at this
-    time it does not seem necessary. 
+    time it does not seem necessary.
+
+    There is also consideration to use an object oriented approach for the
+    bolts, forces, and bolt pattern. This would require a major refactoring of
+    the code and will not happen immediately. 
 """
 import math
 
@@ -220,7 +224,7 @@ def calc_centroid(bolts):
 
 
 def calc_bolt_coords_wrt_centroid(bolts):
-    """Calculate bolt coords with the centroid of the bolt group as the origin.
+    """Calculate bolt coords with respect to the centroid of the bolt group.
     
     Args:
         bolts (data struct): list of the bolt data structure
@@ -244,7 +248,7 @@ def calc_bolt_coords_wrt_centroid(bolts):
 
 
 def calc_force_coords_wrt_centroid(bolts, force):
-    """Calculate force coords with the centroid of the bolt group as origin.
+    """Calculate force coords with respect to the centroid of the bolt group.
     
     Args:
         bolts (data struct): list of the bolt data structure
@@ -281,7 +285,16 @@ def calc_force_coords_wrt_centroid(bolts, force):
     force[4] = ec
 
 def calc_delta_angle(px, py):
+    """Calculate the angle between the vertical and the force line of action.
 
+    Args:
+        px (float): Applied horizontal force component
+        py (float): Applied vertical force component
+
+    Returns:
+        delta_angle (float): angle between vertical and the line of action of
+                             the force
+    """
     try:
         delta_angle = -1*math.atan(px/py)
     except:
@@ -379,7 +392,6 @@ def ecc_in_plane_plastic(bolts, force):
     while error > 0.01:
         cur_x = x1
         cur_y = y1
-        cur_mp = mp
 
         sum_rux, sum_ruy, sum_m = calc_bolt_fraction_reactions(bolts, mp)
     
@@ -419,11 +431,22 @@ def ecc_in_plane_plastic(bolts, force):
         if count == 50:
             raise 
 
-    return fx, fy, cur_x, cur_y, cur_mp
+    return cur_x, cur_y
 
 
 def calc_bolt_reactions(bolts, rult):
-    pass
+    """Calculate the actual force on each bolt."""
+    d_max = calc_d_max(bolts)
+    for bolt in bolts:
+        delta = bolt[9]
+        dx = bolt[6]
+        dy = bolt[6]
+        ri = rult*math.pow((1 - math.exp(-10*delta)),0.55)
+        rux = ri*dy/d
+        ruy = ri*dx/d
+
+        bolt[11][0] = rux
+        bolt[11][1] = ruy
 
 
 def calc_bolt_fraction_reactions(bolts, mp):
@@ -451,20 +474,34 @@ def calc_bolt_fraction_reactions(bolts, mp):
 
 
 def calc_moment_about_ic(bolts):
-    """Calculate the moment about the IC of bolt force divided by Rult."""
+    """Calculate the moment about the IC of bolt force fraction.
+    
+    This can be thought of as the resisting moment. 
+    
+    Args:
+        bolts ():
+            
+    Returns:
+        sum_m (float): The total resisting moment due to the bolt force fraction
+                       acting about the IC
+                       
+    Notes:
+        The function also populates the bolt data structure with the calculated
+        bolt deflection, delta, and the bolt force fraction, ri_rult_ratio.
+    """
     sum_m = 0.0
     d_max = calc_d_max(bolts)
     for bolt in bolts:
         d = bolt[7]
 
         delta = 0.34*d/d_max
-        r = math.pow((1 - math.exp(-10*delta)),0.55) #ri/rult
-        m = r*d
+        ri_rult_ratio = math.pow((1 - math.exp(-10*delta)),0.55) #ri/rult
+        m = ri_rult_ratio*d
 
         sum_m = sum_m + m
         
         bolt[8] = delta
-        bolt[9] = r
+        bolt[9] = ri_rult_ratio
 
     return sum_m
 
@@ -500,7 +537,7 @@ def calc_r(force, x_ic, y_ic, delta_angle):
 
 
 def calc_mp(force):
-    """Calculate the moment about the instanteous center."""
+    """Calculate the moment due to the applied force about the IC."""
     px = force[1][0]
     py = force[1][1]
 
@@ -528,6 +565,17 @@ def calc_instanteous_center(bolts, fx, fy, mo, x0, y0):
 
 
 def calc_d_max(bolts):
+    """Return the maximum distance from the IC of any bolt in the bolt group.
+
+    This function loops through the bolt data structures looking for the bolt
+    with the maximum distance from the IC. It returns the maximum distance
+    found. 
+    Args:
+        bolts ():
+
+    Returns:
+        d_max (float): Maximum distance from IC of any bolt in the bolt group
+    """
     d_max = 0.0
     for bolt in bolts:
         d = bolt[7]
