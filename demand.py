@@ -379,7 +379,7 @@ def calc_j(bolts):
     return j
 
 
-def ecc_in_plane_plastic(bolts, force):
+def iterate_to_instantaneous_center(bolts, force):
     """Iterate to the location of the instantaneous center."""
     px = force[1][0]
     py = force[1][1]
@@ -440,22 +440,55 @@ def ecc_in_plane_plastic(bolts, force):
 
 
 def calc_bolt_reactions(bolts, rult):
-    """Calculate the actual force on each bolt."""
+    """Calculate the actual force on each bolt.
+    
+    Now that the approximate location of instantaneous center is known from the 
+    iterate_to_instantaneous_center the deflection of each bolt is known. The
+    deflection for each bolt is stored in the bolt data structure and is updated
+    during the iteration. 
+
+    With the deformation of each bolt known and the ultimate capacity of the bolt
+    provided by the user one can calculate the actual shear force on each bolt
+    using the equation below.
+
+    ri = rult*(1 - e^(-10*delta))^(0.55)
+    rux = ri*dy/d_max
+    ruy = ri*dx/d_max
+
+    Defintions of variables:
+        ri - total shear reaction on bolt
+        delta - deformation of bolt
+        rux - x-component of shear reaction on bolt
+        ruy - y-component of shear reaction on bolt
+
+    Args:
+        bolts (data structure):
+        rult (float): ultimate capacity of a single bolt
+
+    Returns:
+        None
+
+    Notes:
+        Must execute the iterate_to_instantaneous_center function before calling
+        this function.
+
+        Populates the Rux and Ruy in the bolt data structure.
+    """
     d_max = calc_d_max(bolts)
     for bolt in bolts:
         delta = bolt[9]
         dx = bolt[6]
         dy = bolt[6]
         ri = rult*math.pow((1 - math.exp(-10*delta)),0.55)
-        rux = ri*dy/d
-        ruy = ri*dx/d
+        rux = ri*dy/d_max
+        ruy = ri*dx/d_max
 
         bolt[11][0] = rux
         bolt[11][1] = ruy
 
 
 def calc_bolt_fraction_reactions(bolts, mp):
-    """Calculate the resisting bolt force."""
+    """Calculate the resisting bolt force fraction."""
     sum_m = calc_moment_about_ic(bolts)
 
     sum_rux = 0.0
@@ -512,8 +545,19 @@ def calc_moment_about_ic(bolts):
 
 
 def calc_d(bolts, x_ic, y_ic):
-    """Calculate the distance from the bolt to the instanteous center."""
+    """Calculate the distance from the bolt to the instanteous center.
+    
+    Args:
+        bolts ():
+        x_ic (float): x-coordinate of the instantaneous center
+        y_ic (float): y_coordinate of the instantaneous center
 
+    Returns:
+        None
+
+    Notes:
+        Populates the dx, dy, and d in the bolt data structure
+    """
     for bolt in bolts:
         dx = bolt[3][0] - x_ic
         dy = bolt[3][1] - y_ic
@@ -525,7 +569,7 @@ def calc_d(bolts, x_ic, y_ic):
         bolt[7] = d
 
 
-def calc_r(force, x_ic, y_ic, delta_angle):
+def calc_force_location_wrt_centroid(force, x_ic, y_ic, delta_angle):
     """Calculate the location of the load application point wrt the IC."""
     cx = force[3][0]
     cy = force[3][1]
@@ -541,8 +585,51 @@ def calc_r(force, x_ic, y_ic, delta_angle):
     force[6] = r
 
 
+def calc_r(force, x_ic, y_ic, delta_angle):
+    """Calculate the perpendicular distance from the line of application to the IC.
+    
+    This function calculates the "moment arm" of the applied force with respect
+    to the instantaneous center. 
+
+    This distance is different from the distance between the point of application
+    to the instantaneous center because it accounts for the direction of the
+    applied force. 
+
+    Args:
+        force ():
+        x_ic (float): x-component of the instantaneous center
+        y_ic (float): y-component of the instantaneous center
+        delta_angle (float): angle measured from vertical to the line of action,
+                             clockwise taken as negative
+
+    Returns:
+        None
+
+    Notes:
+        Populates r in the force data structure
+    """
+    cx = force[3][0]
+    cy = force[3][1]
+
+    r = abs(cx*math.cos(delta_angle) + cy*math.sin(delta_angle) - 
+            x_ic*math.cos(delta_angle) - y_ic*math.sin(delta_angle))
+
+    force[6] = r
+
+
 def calc_mp(force):
-    """Calculate the moment due to the applied force about the IC."""
+    """Calculate the moment due to the applied force about the IC.
+    
+    The moment about the instantaneous center of teh applied for is updated on
+    each iteration, each time a new approximation of the instantaneous center is
+    made.
+
+    Args:
+        force ():
+
+    Returns:
+        mp (float): moment due to the applied force about the IC
+    """
     px = force[1][0]
     py = force[1][1]
 
@@ -555,7 +642,30 @@ def calc_mp(force):
 
 
 def calc_instanteous_center(bolts, fx, fy, mo, x0, y0):
-    """Calculate the instanteous center with respect to the centroid."""
+    """Calculate the instanteous center with respect to another coordinate point.
+    
+    This function calculates the x and y coordinates of the instantaneous center
+    with respect to another coordinate point. This helps to keep track of the
+    location of the instantaneous center. 
+
+    One would start with the centroid at (0,0) and calculate the first iteration
+    of the instantaneous center. Then the second iteration of the instantaneous
+    center would be calculated based on the location of the first iteration. 
+
+    Args:
+        bolts ():
+        fx (float): x-component of the applied force
+        fy (float): y-component of the applied force
+        mo (float): moment about the centroid of the applied force
+        x0 (float): x-component of the previous approximation of the IC
+        x0 (float): y-component of the previous approximation of the IC
+
+    Returns
+        x1 (float): x-component of the current approximation of the IC
+        y1 (float): y-component of the current approximation of the IC
+
+    Notes:
+    """
     j = calc_j(bolts)
 
     num_bolts = len(bolts)
@@ -575,11 +685,15 @@ def calc_d_max(bolts):
     This function loops through the bolt data structures looking for the bolt
     with the maximum distance from the IC. It returns the maximum distance
     found. 
+
     Args:
         bolts ():
 
     Returns:
         d_max (float): Maximum distance from IC of any bolt in the bolt group
+
+    Notes:
+        Must execute 
     """
     d_max = 0.0
     for bolt in bolts:
