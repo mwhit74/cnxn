@@ -405,6 +405,7 @@ def iterate_to_instantaneous_center(bolts, force):
 
         x2, y2 = calc_instanteous_center(bolts, fx, fy, mo, x1, y1)
         calc_d(bolts, x2, y2)
+        calc_force_location_wrt_centroid(force, x2, y2, delta_angle)
         calc_r(force, x2, y2, delta_angle)
         mp = calc_mp(force)
 
@@ -570,19 +571,29 @@ def calc_d(bolts, x_ic, y_ic):
 
 
 def calc_force_location_wrt_centroid(force, x_ic, y_ic, delta_angle):
-    """Calculate the location of the load application point wrt the IC."""
+    """Calculate the location of the load application point wrt the IC.
+    
+    Args:
+        force ():
+        x_ic (float): x-component of the instantaneous center
+        y_ic (float): y-component of the instantaneous center
+        delta_angle (float): angle measured from vertical to the line of action,
+                             clockwise taken as negative
+
+    Returns:
+        None
+
+    Notes:
+        Populates dx_f and dy_f in the force data structure.
+    """
     cx = force[3][0]
     cy = force[3][1]
 
     dx_f = cx - x_ic
     dy_f = cy - y_ic
 
-    r = abs(cx*math.cos(delta_angle) + cy*math.sin(delta_angle) - 
-            x_ic*math.cos(delta_angle) - y_ic*math.sin(delta_angle))
-
     force[5][0] = dx_f
     force[5][1] = dy_f
-    force[6] = r
 
 
 def calc_r(force, x_ic, y_ic, delta_angle):
