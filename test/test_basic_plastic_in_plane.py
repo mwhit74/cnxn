@@ -133,10 +133,7 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         y0 = 0.0
         x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, px, py, mo, x0,
                                                     y0)
-        try:
-            delta_angle = math.atan(px/py)
-        except ZeroDivisionError, e:
-            delta_angle = math.pi/2
+        delta_angle = demand.calc_delta_angle(px, py)
 
         demand.calc_r(self.force1, x_ic, y_ic, delta_angle)
 
@@ -157,10 +154,7 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         y0 = 0.0
         x_ic, y_ic = demand.calc_instanteous_center(self.bolts2, px, py, mo, x0,
                                                     y0)
-        try:
-            delta_angle = math.atan(px/py)
-        except ZeroDivisionError, e:
-            delta_angle = math.pi/2
+        delta_angle = demand.calc_delta_angle(px, py)
 
         demand.calc_r(self.force2, x_ic, y_ic, delta_angle)
 
@@ -279,7 +273,7 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         self.assertAlmostEqual(c_df_y, df_y, places=3)
         self.assertAlmostEqual(c_r, r, places=3)
 
-    def test_calc_plastic_reactions_1(self):
+    def test_calc_bolt_fraction_reactions_1(self):
         demand.calc_bolt_coords_wrt_centroid(self.bolts1)
         demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
         demand.calc_moments_about_centroid(self.force1)
@@ -308,7 +302,7 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         self.assertAlmostEqual(c_sum_ruy, sum_ruy, places=3)
         self.assertAlmostEqual(c_sum_m, sum_m, places=3)
 
-    def test_calc_plastic_reactions_2(self):
+    def test_calc_bolt_fraction_reactions_2(self):
         demand.calc_bolt_coords_wrt_centroid(self.bolts2)
         demand.calc_force_coords_wrt_centroid(self.bolts2, self.force2)
         demand.calc_moments_about_centroid(self.force2)
@@ -362,13 +356,10 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         c_y2 = 0.0000
         c_mp = -4.991
 
-        fx, fy, x2, y2, mp = demand.ecc_in_plane_plastic(self.bolts1, self.force1)
+        x2, y2 = demand.ecc_in_plane_plastic(self.bolts1, self.force1)
 
-        self.assertAlmostEqual(c_fx, fx, places=3)
-        self.assertAlmostEqual(c_fy, fy, places=3)
         self.assertAlmostEqual(c_x2, x2, places=3)
         self.assertAlmostEqual(c_y2, y2, places=3)
-        self.assertAlmostEqual(c_mp, mp, places=3)
 
         
     def test_calc_ecc_in_plane_plastic_2(self):
@@ -396,12 +387,43 @@ class TestDemandPlasticInPlane(unittest.TestCase):
         c_y2 = -0.5835
         c_mp = -20.387
 
-        pdb.set_trace()
+        x2, y2 = demand.ecc_in_plane_plastic(self.bolts2, self.force2)
 
-        fx, fy, x2, y2, mp = demand.ecc_in_plane_plastic(self.bolts2, self.force2)
-
-        self.assertAlmostEqual(c_fx, fx, places=3)
-        self.assertAlmostEqual(c_fy, fy, places=3)
         self.assertAlmostEqual(c_x2, x2, places=3)
         self.assertAlmostEqual(c_y2, y2, places=3)
-        self.assertAlmostEqual(c_mp, mp, places=3)
+
+
+    def test_calc_bolt_reactions_1(self):
+        demand.calc_bolt_coords_wrt_centroid(self.bolts1)
+        demand.calc_force_coords_wrt_centroid(self.bolts1, self.force1)
+        demand.calc_moments_about_centroid(self.force1)
+        px = self.force1[1][0]
+        py = self.force1[1][1]
+        mo = self.force1[2][2]
+        x0 = 0.0
+        y0 = 0.0
+        x_ic, y_ic = demand.calc_instanteous_center(self.bolts1, px, py, mo, x0,
+                                                    y0)
+        delta_angle = demand.calc_delta_angle(px, py)
+
+        demand.calc_r(self.force1, x_ic, y_ic, delta_angle)
+
+        mp = demand.calc_mp(self.force1)
+
+        demand.calc_d(self.bolts1, x_ic, y_ic)
+
+        x2, y2 = demand.ecc_in_plane_plastic(self.bolts1, self.force1)
+
+        demand.calc_bolt_reactions(bolts, rult)
+
+        crux = []
+        cruy = []
+
+        for bolt, c_rux, c_ruy in zip(bolts, crux, cruy):
+            rux = bolt[10][0]
+            ruy = bolt[10][1]
+
+            self.assertAlmostEqual(c_rux, rux, places=3)
+            self.assertAlmostEqual(c_ruy, ruy, places=3)
+
+        
