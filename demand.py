@@ -379,65 +379,84 @@ def calc_j(bolts):
     return j
 
 
-def iterate_to_instantaneous_center(bolts, force):
-    """Iterate to the location of the instantaneous center."""
+def iterate_to_ic(bolts, force):
+    """Iterate to the location of the instantaneous center.
+    
+    This function starts at the centroid (0.0, 0.0) and calculates the first
+    approximation of the instantaneous center, or what's known as the elastic
+    instantaneous center in the first iteration. This is the starting point
+    for subsequent iterations of the instantaneous center.
+
+    Args:
+        bolts ():
+        force ():
+
+    Returns:
+        x (float):
+        y (float):
+
+    Notes:
+        a seperate but unncessary convergence test
+        r = force[6]
+        if delta_angle == 0.0:
+            pfx = 0.0
+        else:
+            pfx = sum_rux/math.sin(delta_angle)
+
+        if delta_angle == math.pi/2:
+            pfy = 0.0
+        else:
+            pfy = sum_ruy/math.cos(delta_angle)
+
+        pm = sum_m/r
+
+        diff_xy = abs(pfx - pfy)
+        diff_ym = abs(pfy - pm)
+        diff_mx = abs(pm - pfx)
+         
+    """
     px = force[1][0]
     py = force[1][1]
     mo = force[2][2]
+    delta_angle = calc_delta_angle(px, py)
     x0 = 0.0 #coordinate system centered on centroid
     y0 = 0.0 #coordinate system centered on centroid
-    x1, y1 = calc_instanteous_center(bolts, px, py, mo, x0, y0) #elastic IC
-    mp = calc_mp(force)
-    calc_d(bolts, x1, y1)
-    delta_angle = calc_delta_angle(px, py)
 
-    error = 1.0
+    fx = px
+    fy = py
     count = 0
 
-    while error > 0.01:
-        cur_x = x1
-        cur_y = y1
+    while True:
+        x_ic, y_ic = calc_instanteous_center(bolts, fx, fy, mo, x0, y0)
+        calc_bolt_location_wrt_ic(bolts, x_ic, y_ic)
+        calc_force_location_wrt_ic(force, x_ic, y_ic, delta_angle)
+        mp = calc_mp(force)
 
         sum_rux, sum_ruy, sum_m = calc_bolt_fraction_reactions(bolts, mp)
-    
+
+        if count == 0:
+            sum_d_squared = calc_sum_d_squared(bolts)
+            d_max = calc_d_max(bolts)
+            ce = sum_d_squared/(d_max*mp)
+   
+        cu = mp/sum_m
+
         fx = px + sum_rux
         fy = py + sum_ruy
 
-        x2, y2 = calc_instanteous_center(bolts, fx, fy, mo, x1, y1)
-        calc_d(bolts, x2, y2)
-        calc_force_location_wrt_centroid(force, x2, y2, delta_angle)
-        calc_r(force, x2, y2, delta_angle)
-        mp = calc_mp(force)
-
-        x1 = x2
-        y1 = y2
-
-        #a seperate but unncessary convergence test
-        #r = force[6]
-        #if delta_angle == 0.0:
-        #    pfx = 0.0
-        #else:
-        #    pfx = sum_rux/math.sin(delta_angle)
-
-        #if delta_angle == math.pi/2:
-        #    pfy = 0.0
-        #else:
-        #    pfy = sum_ruy/math.cos(delta_angle)
-
-        #pm = sum_m/r
-
-        #diff_xy = abs(pfx - pfy)
-        #diff_ym = abs(pfy - pm)
-        #diff_mx = abs(pm - pfx)
-
         error = max(abs(fx), abs(fy))
+
+        if error < 0.01:
+            break
+        elif count == 50:
+            raise 
+        else:
+            x0 = x_ic
+            y0 = y_ic
 
         count += 1
 
-        if count == 50:
-            raise 
-
-    return cur_x, cur_y
+    return x_ic, y_ic, ce, cu
 
 
 def calc_bolt_reactions(bolts, rult):
@@ -463,7 +482,7 @@ def calc_bolt_reactions(bolts, rult):
         ruy - y-component of shear reaction on bolt
 
     Args:
-        bolts (data structure):
+        bolts (data struct): list of the bolt data structure
         rult (float): ultimate capacity of a single bolt
 
     Returns:
@@ -518,7 +537,7 @@ def calc_moment_about_ic(bolts):
     This can be thought of as the resisting moment. 
     
     Args:
-        bolts ():
+        bolts (data struct): list of the bolt data structure
             
     Returns:
         sum_m (float): The total resisting moment due to the bolt force fraction
@@ -544,12 +563,11 @@ def calc_moment_about_ic(bolts):
 
     return sum_m
 
-
-def calc_d(bolts, x_ic, y_ic):
+def calc_bolt_location_wrt_ic(bolts, x_ic, y_ic):
     """Calculate the distance from the bolt to the instanteous center.
     
     Args:
-        bolts ():
+        bolts (data struct): list of the bolt data structure
         x_ic (float): x-coordinate of the instantaneous center
         y_ic (float): y_coordinate of the instantaneous center
 
@@ -570,11 +588,11 @@ def calc_d(bolts, x_ic, y_ic):
         bolt[7] = d
 
 
-def calc_force_location_wrt_centroid(force, x_ic, y_ic, delta_angle):
+def calc_force_location_wrt_ic(force, x_ic, y_ic, delta_angle):
     """Calculate the location of the load application point wrt the IC.
     
     Args:
-        force ():
+        force (data struct): single force data structure attributes
         x_ic (float): x-component of the instantaneous center
         y_ic (float): y-component of the instantaneous center
         delta_angle (float): angle measured from vertical to the line of action,
@@ -607,7 +625,7 @@ def calc_r(force, x_ic, y_ic, delta_angle):
     applied force. 
 
     Args:
-        force ():
+        force (data struct): single force data structure attributes
         x_ic (float): x-component of the instantaneous center
         y_ic (float): y-component of the instantaneous center
         delta_angle (float): angle measured from vertical to the line of action,
@@ -631,12 +649,12 @@ def calc_r(force, x_ic, y_ic, delta_angle):
 def calc_mp(force):
     """Calculate the moment due to the applied force about the IC.
     
-    The moment about the instantaneous center of teh applied for is updated on
+    The moment about the instantaneous center of the applied for is updated on
     each iteration, each time a new approximation of the instantaneous center is
     made.
 
     Args:
-        force ():
+        force (data struct): single force data structure attributes
 
     Returns:
         mp (float): moment due to the applied force about the IC
@@ -664,7 +682,7 @@ def calc_instanteous_center(bolts, fx, fy, mo, x0, y0):
     center would be calculated based on the location of the first iteration. 
 
     Args:
-        bolts ():
+        bolts (data struct): list of the bolt data structure
         fx (float): x-component of the applied force
         fy (float): y-component of the applied force
         mo (float): moment about the centroid of the applied force
@@ -698,7 +716,7 @@ def calc_d_max(bolts):
     found. 
 
     Args:
-        bolts ():
+        bolts (data struct): list of the bolt data structure
 
     Returns:
         d_max (float): Maximum distance from IC of any bolt in the bolt group
@@ -714,13 +732,13 @@ def calc_d_max(bolts):
 
     return d_max
 
-#def calc_sum_d_squared(bolts):
-#    sum_d_sqaured = 0.0
-#    for bolt in bolts:
-#        d = bolt[6]
-#        sum_d_squared = sum_d_squared + math.pow(de, 2)
-#
-#    return sum_d_squared
+def calc_sum_d_squared(bolts):
+    sum_d_squared = 0.0
+    for bolt in bolts:
+        d = bolt[7]
+        sum_d_squared = sum_d_squared + math.pow(d, 2)
+
+    return sum_d_squared
 
 def calc_neutral_axis(bolts):
     pass
