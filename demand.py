@@ -387,6 +387,10 @@ def iterate_to_ic(bolts, force):
     instantaneous center in the first iteration. This is the starting point
     for subsequent iterations of the instantaneous center.
 
+    After each iteration force equilibrium is used to determine if the
+    approximated IC is close enough to reduce error to a minimum. The applied
+    force and the reaction of the bolts are summed about the IC.
+
     Args:
         bolts ():
         force ():
@@ -649,10 +653,6 @@ def calc_r(force, x_ic, y_ic, delta_angle):
 def calc_mp(force):
     """Calculate the moment due to the applied force about the IC.
     
-    The moment about the instantaneous center of the applied for is updated on
-    each iteration, each time a new approximation of the instantaneous center is
-    made.
-
     Args:
         force (data struct): single force data structure attributes
 
@@ -672,15 +672,11 @@ def calc_mp(force):
 
 def calc_instanteous_center(bolts, fx, fy, mo, x0, y0):
     """Calculate the instanteous center with respect to another coordinate point.
+
+    The distance to the next IC is calculated based on the differential of
+    force between the applied force and the resistance of the bolt group about
+    the current IC. 
     
-    This function calculates the x and y coordinates of the instantaneous center
-    with respect to another coordinate point. This helps to keep track of the
-    location of the instantaneous center. 
-
-    One would start with the centroid at (0,0) and calculate the first iteration
-    of the instantaneous center. Then the second iteration of the instantaneous
-    center would be calculated based on the location of the first iteration. 
-
     Args:
         bolts (data struct): list of the bolt data structure
         fx (float): x-component of the applied force
@@ -733,6 +729,7 @@ def calc_d_max(bolts):
     return d_max
 
 def calc_sum_d_squared(bolts):
+    """Return the sum of the squared bolt distances."""
     sum_d_squared = 0.0
     for bolt in bolts:
         d = bolt[7]
