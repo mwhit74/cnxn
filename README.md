@@ -1,4 +1,4 @@
-The sbc package is designed to assist in the analysis of simple bolted
+The cnxn package is designed to assist in the analysis of simple bolted
 connections. A simple bolt connection transfers tension and shear from one
 component to another through bolts. This program is limited to bolt analysis. It
 does not currently consider the member capacity in the vacinity of the connection
